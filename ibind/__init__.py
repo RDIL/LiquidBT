@@ -1,5 +1,5 @@
-import setuptools
 import logging
+import os
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -83,5 +83,34 @@ def build(b):
             logging.getLogger().debug(f"Building package {thepackage.get("name")}.")
             setuptools.setup(thepackage.setuptools_args)
     else:
+        # BuildConfiguration
+        setuptoolsargs: dict = b.setuptools_args
         logging.getLogger().debug(f"Building package {b.get("name")}.")
-        setuptools.setup(b.setuptools_args)
+        # create container we can run this in
+        try:
+            open("tmpsetup.py", mode="x")
+        except:
+            open("tmpsetup.py", mode="w")
+        with open("tmpsetup.py", mode="a") as fh:
+            fh.write(
+                """
+                import setuptools
+                setuptools.setup(
+                """
+            )
+            for key, value in setuptoolsargs:
+                fh.write(f"\n    {key}={value},")
+            fh.write("\n)")
+            stringbuilder: str = ""
+            if b.formats == []:
+                logging.getLogger.error(f"No formats specified for package {b.pkgname}!")
+            else:
+                for format in b.formats:
+                    if stringbuilder == "":
+                        stringbuilder = f"{str(format)}"
+                    else:
+                        stringbuilder += f" {str(format)}"  # space so setuptools doesnt freak
+            if not "nt" in sys.platform.lower():
+                os.system(f"python3 tmpsetup.py {stringbuilder}")
+            else:
+                os.system(f"python tmpsetup.py {stringbuilder}")
