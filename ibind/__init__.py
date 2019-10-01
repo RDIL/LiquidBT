@@ -4,6 +4,21 @@ import logging
 logging.getLogger().setLevel(logging.INFO)
 
 
+class DistFormat:
+    def __str__(self) -> str:
+        return ""
+
+
+class SourceDist(DistFormat):
+    def __str__(self) -> str:
+        return "sdist"
+
+
+class WheelBinaryDist(DistFormat):
+    def __str__(self) -> str:
+        return "bdist_wheel"
+
+
 class BuildPackageSet:
     def __init__(self):
         self.packages = []
@@ -32,6 +47,18 @@ class BuildConfiguration:
         if self.pkgname is None:
             raise Exception("Error initializing build configuration - no package name specified!")
         self.setuptools_args = kwargs
+        self.formats = []
+
+    def add_format(self, d: DistFormat):
+        if type(d) is not DistFormat and (
+            type(b) is not WheelBinaryDist and
+            type(b) is not SourceDist
+        ):
+            logging.getLogger().error(
+                "Incorrect format specified!"
+            )
+            return
+        self.formats.append(d)
 
 
 def build(b):
