@@ -19,6 +19,16 @@ class WheelBinaryDist(DistFormat):
         return "bdist_wheel"
 
 
+class DistInfo(DistFormat):
+    def __str__(self) -> str:
+        return "dist_info"
+
+
+class EggBinaryDist(DistFormat):
+    def __str__(self) -> str:
+        return "bdist_egg"
+
+
 class BuildPackageSet:
     def __init__(self):
         self.packages = []
@@ -50,9 +60,12 @@ class BuildConfiguration:
         self.formats = []
 
     def add_format(self, d: DistFormat):
-        if type(d) is not DistFormat and (
+        if (
+            type(d) is not DistFormat and
             type(b) is not WheelBinaryDist and
-            type(b) is not SourceDist
+            type(b) is not SourceDist and
+            type(b) is not EggBinaryDist and
+            type(b) is not DistInfo
         ):
             logging.getLogger().error(
                 "Incorrect format specified!"
