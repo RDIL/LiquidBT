@@ -81,7 +81,7 @@ def build(b):
     if type(b) is BuildPackageSet:
         for thepackage in b.packages:
             logging.getLogger().debug(f"Building package {thepackage.get("name")}.")
-            setuptools.setup(thepackage.setuptools_args)
+            #setuptools.setup(thepackage.setuptools_args)
     else:
         # BuildConfiguration
         setuptoolsargs: dict = b.setuptools_args
@@ -101,7 +101,7 @@ def build(b):
             for key, value in setuptoolsargs:
                 fh.write(f"\n    {key}={value},")
             fh.write("\n)")
-            stringbuilder: str = ""
+            stringbuilder: str
             if b.formats == []:
                 logging.getLogger.error(f"No formats specified for package {b.pkgname}!")
             else:
