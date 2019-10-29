@@ -1,10 +1,14 @@
 import logging
 import os
+import sys
 
 logging.getLogger().setLevel(logging.INFO)
 
 
 class DistFormat:
+    def __init__(self) -> None:
+        return None
+
     def __str__(self) -> str:
         return ""
 
@@ -29,6 +33,29 @@ class EggBinaryDist(DistFormat):
         return "bdist_egg"
 
 
+class BuildConfiguration:
+    def __init__(self, **kwargs):
+        self.pkgname = kwargs.get("name")
+        if self.pkgname is None:
+            raise Exception("Error initializing build configuration - no package name specified!")
+        self.setuptools_args = kwargs
+        self.formats = []
+
+    def add_format(self, d: DistFormat):
+        if (
+            type(d) is not DistFormat and
+            type(d) is not WheelBinaryDist and
+            type(d) is not SourceDist and
+            type(d) is not EggBinaryDist and
+            type(d) is not DistInfo
+        ):
+            logging.getLogger().error(
+                "Incorrect format specified!"
+            )
+            return
+        self.formats.append(d)
+
+
 class BuildPackageSet:
     def __init__(self):
         self.packages = []
@@ -51,41 +78,19 @@ class BuildPackageSet:
             self.packages.pop(self.packages.index(b))
 
 
-class BuildConfiguration:
-    def __init__(self, **kwargs):
-        self.pkgname = kwargs.get("name")
-        if self.pkgname is None:
-            raise Exception("Error initializing build configuration - no package name specified!")
-        self.setuptools_args = kwargs
-        self.formats = []
-
-    def add_format(self, d: DistFormat):
-        if (
-            type(d) is not DistFormat and
-            type(b) is not WheelBinaryDist and
-            type(b) is not SourceDist and
-            type(b) is not EggBinaryDist and
-            type(b) is not DistInfo
-        ):
-            logging.getLogger().error(
-                "Incorrect format specified!"
-            )
-            return
-        self.formats.append(d)
-
-
 def build(b):
     if type(b) is not BuildConfiguration and type(b) is not BuildPackageSet:
         raise Exception("Error running build - Incompatible type passed.")
 
     if type(b) is BuildPackageSet:
+        # type is buildpackageset
         for thepackage in b.packages:
-            logging.getLogger().debug(f"Building package {thepackage.get("name")}.")
-            #setuptools.setup(thepackage.setuptools_args)
+            logging.getLogger().debug(f"Building package {thepackage.pkgname}.")
+            build(thepackage)  # well yeah its risky but...
     else:
-        # BuildConfiguration
+        # type is BuildConfiguration
         setuptoolsargs: dict = b.setuptools_args
-        logging.getLogger().debug(f"Building package {b.get("name")}.")
+        logging.getLogger().debug(f"Building package {b.pkgname}.")
         # create container we can run this in
         try:
             open("tmpsetup.py", mode="x")
@@ -103,7 +108,7 @@ def build(b):
             fh.write("\n)")
             stringbuilder: str
             if b.formats == []:
-                logging.getLogger.error(f"No formats specified for package {b.pkgname}!")
+                logging.getLogger().error(f"No formats specified for package {b.pkgname}!")
             else:
                 for format in b.formats:
                     if stringbuilder == "":
@@ -114,3 +119,5 @@ def build(b):
                 os.system(f"python3 tmpsetup.py {stringbuilder}")
             else:
                 os.system(f"python tmpsetup.py {stringbuilder}")
+            # after build completion
+            os.remove("tmpsetup.py")
