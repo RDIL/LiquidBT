@@ -121,3 +121,8 @@ def build(b):
                 os.system(f"python tmpsetup.py {stringbuilder}")
             # after build completion
             os.remove("tmpsetup.py")
+            try:
+                os.remove(f"{b.pkgname}.egg-info")
+            except:
+                # no egg info
+                pass
