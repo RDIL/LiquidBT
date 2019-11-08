@@ -34,8 +34,8 @@ class EggBinaryDist(DistFormat):
 
 
 class BuildConfiguration:
-    def __init__(self, **kwargs):
-        self.pkgname = kwargs.get("name")
+    def __init__(self, name, **kwargs):
+        self.pkgname = name
         if self.pkgname is None:
             raise Exception("Error initializing build configuration - no package name specified!")
         self.setuptools_args = kwargs
