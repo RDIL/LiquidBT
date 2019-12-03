@@ -6,17 +6,18 @@ from .typeClasses import (
     BuildConfiguration, BuildPackageSet, DistFormat,
     DistInfo, EggBinaryDist, WheelBinaryDist, SourceDist
 )
+from .plugins import Plugin
 
 logging.getLogger().setLevel(logging.INFO)
 
 __all__ = [
     "BuildConfiguration", "BuildPackageSet", "DistFormat",
     "DistInfo", "EggBinaryDist", "WheelBinaryDist", "SourceDist",
-    "build"
+    "build", "Plugin"
 ]
 
 
-def build(b):
+def build(b, plugins=[]):
     if type(b) is not BuildConfiguration and type(b) is not BuildPackageSet:
         raise Exception("Error running build - Incompatible type passed.")
 
@@ -51,14 +52,11 @@ def build(b):
             logging.getLogger().error(f"No formats specified for package {pkgname}!")
         else:
             for format in b.formats:
-                if stringbuilder == "":
-                    stringbuilder = f"{str(format)}"
-                else:
-                    stringbuilder += f" {str(format)}"  # space so setuptools doesnt freak
+                stringbuilder += f" {str(format)}"  # space so setuptools doesnt freak
         if not "nt" in sys.platform.lower():
             os.system(f"python3 tmpsetup.py {stringbuilder}")
         else:
-            os.system(f"python tmpsetup.py {stringbuilder}")
+            os.system(f"python tmpsetup.py{stringbuilder}")
         # after build completion
         os.remove("tmpsetup.py")
         os.remove(pkgname)
