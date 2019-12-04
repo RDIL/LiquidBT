@@ -7,6 +7,7 @@ from .typeClasses import (
     DistInfo, EggBinaryDist, WheelBinaryDist, SourceDist
 )
 from .plugins import Plugin
+from .handlers import create_or_clear, write_setup_file
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -18,6 +19,9 @@ __all__ = [
 
 
 def build(b, plugins=[]):
+    for plugin in plugins:
+        plugin.load()
+
     if type(b) is not BuildConfiguration and type(b) is not BuildPackageSet:
         raise Exception("Error running build - Incompatible type passed.")
 
@@ -25,41 +29,38 @@ def build(b, plugins=[]):
         # type is buildpackageset
         for thepackage in b.packages:
             logging.getLogger().debug(f"Building package {thepackage.pkgname}.")
-            build(thepackage)  # well yeah its risky but...
+            build(thepackage)
     else:
         # type is BuildConfiguration
         setuptoolsargs: dict = b.setuptools_args
         pkgname: str = b.pkgname
         logging.getLogger().debug(f"Building package {pkgname}.")
         # create container we can run this in
-        open("tmpsetup.py", mode="x")
-        shutil.copy(f"{pkgname}.s", pkgname)
-        with open("tmpsetup.py", mode="a") as fh:
-            fh.write(
-                """
-                import setuptools
-                setuptools.setup(
-                """
-            )
-            for key, value in setuptoolsargs:
-                if not key == "packages":
-                    fh.write(f"\n    {key}={value},")
-                else:
-                    fh.write(f"\n    packages=[\"{pkgname}\"]")
-            fh.write("\n)")
-        stringbuilder: str
+        create_or_clear("tmpsetup.py")
+        shutil.copytree(f"{pkgname}.s", pkgname)
+        write_setup_file(setuptoolsargs, pkgname)
+        stringbuilder = ""
         if b.formats == []:
             logging.getLogger().error(f"No formats specified for package {pkgname}!")
         else:
             for format in b.formats:
                 stringbuilder += f" {str(format)}"  # space so setuptools doesnt freak
+        for file in os.listdir(pkgname):
+            actualfile = f"{pkgname}/{file}"
+            code = open(actualfile, "r").read()
+            # clear file
+            handle = open(actualfile, "w")
+            # have the plugins do their thing
+            for plugin in plugins:
+                code = plugin.process_code(code)
+            handle.write(code)
         if not "nt" in sys.platform.lower():
             os.system(f"python3 tmpsetup.py {stringbuilder}")
         else:
             os.system(f"python tmpsetup.py{stringbuilder}")
         # after build completion
         os.remove("tmpsetup.py")
-        os.remove(pkgname)
+        shutil.rmtree(pkgname)
         try:
             os.remove(f"{b.pkgname}.egg-info")
         except:

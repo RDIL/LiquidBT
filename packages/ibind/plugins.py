@@ -30,7 +30,7 @@ class Plugin:
                     self,
                     code: str
                 ) -> str:
-                    # boolean:
+                    # some boolean:
                     needs_transform = True
                     if needs_transform:
                         return code.replace(
