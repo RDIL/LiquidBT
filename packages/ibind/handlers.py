@@ -11,6 +11,7 @@ def create_or_clear(file):
 
 
 def write_setup_file(setuptoolsargs, pkgname):
+    log(f"Writing setuptools confguration for {pkgname}", phase=3)
     with open("tmpsetup.py", mode="a") as fh:
         fh.write("""
 import setuptools
@@ -32,11 +33,10 @@ def log(message, phase=2, max=6):
 def setuptools_launch_wrapper(setuptools_args: str):
     """Launches setuptools with the given arguments."""
 
-    setuptools_args = f" --quiet{setuptools_args}"
     if "nt" in sys.platform.lower():
-        os.system(f"python tmpsetup.py{setuptools_args}")
+        os.system(f"python tmpsetup.py --quiet{setuptools_args}")
     else:
-        os.system(f"python3 tmpsetup.py{setuptools_args}")
+        os.system(f"python3 tmpsetup.py --quiet{setuptools_args}")
 
 
 def unsafely_clean(pkgname):

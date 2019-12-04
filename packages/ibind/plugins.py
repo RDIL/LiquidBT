@@ -45,3 +45,21 @@ class Plugin:
     def shutdown(self):
         """Called on shutdown of ibind."""
         pass
+    
+    def commands(self):
+        """
+        Entrypoint to add custom commands.
+        
+        Format:
+        {
+            "my-command-name": someFunctionOrLambda
+        }
+
+        The function must accept the argument b,
+        which will be whatever configuration the
+        user passed. You may need to validate the type.
+
+        If you don't want to add additional commands, just
+        return None for this function.
+        """
+        return {}

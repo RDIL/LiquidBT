@@ -9,7 +9,9 @@ config = ibind.BuildConfiguration(
     version="0.0.1"
 )
 config.add_format(ibind.SourceDist())
+config.add_format(ibind.EggBinaryDist())
+config.add_format(ibind.WheelBinaryDist())
 
 theset.add(config)
 
-ibind.build(theset, plugins=None)
+ibind.main(theset, plugins=None)

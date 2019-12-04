@@ -5,7 +5,6 @@ from .typeClasses import (
     BuildConfiguration, BuildPackageSet, DistFormat,
     DistInfo, EggBinaryDist, WheelBinaryDist, SourceDist
 )
-from .plugins import Plugin
 from .handlers import (
     create_or_clear, write_setup_file, log,
     setuptools_launch_wrapper, unsafely_clean
@@ -14,7 +13,7 @@ from .handlers import (
 __all__ = [
     "BuildConfiguration", "BuildPackageSet", "DistFormat",
     "DistInfo", "EggBinaryDist", "WheelBinaryDist", "SourceDist",
-    "build", "Plugin", "log"
+    "main", "log"
 ]
 
 
@@ -51,7 +50,7 @@ def actions(b, plugins):
     log("Done!", phase=6)
 
 
-def build(b, plugins=[]):
+def main(b, plugins=[]):
     log("Loading Plugins", phase=1)
     if plugins is None:
         plugins = []
@@ -59,15 +58,24 @@ def build(b, plugins=[]):
     for plugin in plugins:
         plugin.load()
 
-    if type(b) is BuildPackageSet:
-        for thepackage in b.packages:
-            log(f"Building {thepackage.pkgname}")
-            actions(thepackage, plugins)
-    elif type(b) is BuildConfiguration:
-        log(f"Building {b.pkgname}")
-        actions(b, plugins)
-    else:
-        raise Exception("Error running build - Incompatible type passed.")
-    
+    args = sys.argv.copy()
+    command = "build"
+    for item in args:
+        if not item.startswith("-") and not item.endswith(".py"):
+            command = item.replace("-", "")
+
+    if command == "build":
+        if type(b) is BuildPackageSet:
+            for thepackage in b.packages:
+                log(f"Building {thepackage.pkgname}")
+                actions(thepackage, plugins)
+        elif type(b) is BuildConfiguration:
+            log(f"Building {b.pkgname}")
+            actions(b, plugins)
+        else:
+            raise Exception("Error running build - Incompatible type passed.")
+
     for plugin in plugins:
+        if command != "build" and command in plugin.commands():
+            plugin.commands()[command](b)
         plugin.shutdown()
