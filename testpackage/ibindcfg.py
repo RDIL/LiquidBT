@@ -1,5 +1,4 @@
 import ibind
-import ibind_plugin_obfuscation
 
 theset = ibind.BuildPackageSet()
 
@@ -13,6 +12,4 @@ config.add_format(ibind.SourceDist())
 
 theset.add(config)
 
-ibind.build(theset, plugins=[
-    ibind_plugin_obfuscation.Plugin()
-])
+ibind.build(theset, plugins=None)
