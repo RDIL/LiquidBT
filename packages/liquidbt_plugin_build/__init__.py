@@ -15,19 +15,23 @@ __all__ = [
 
 
 class Build(Plugin):
+    def __init__(self, b):
+        self.b = b
+
+    @property
     def commands(self):
         return {
             "build": self.entrypoint
         }
 
-    def entrypoint(self, b, plugins):
-        if type(b) is BuildPackageSet:
-            for thepackage in b.packages:
+    def entrypoint(self, plugins):
+        if type(self.b) is BuildPackageSet:
+            for thepackage in self.b.packages:
                 log(f"Building {thepackage.pkgname}")
                 self.actions(thepackage, plugins)
-        elif type(b) is BuildConfiguration:
-            log(f"Building {b.pkgname}")
-            self.actions(b, plugins)
+        elif type(self.b) is BuildConfiguration:
+            log(f"Building {self.b.pkgname}")
+            self.actions(self.b, plugins)
         else:
             raise Exception("Error running build - Incompatible type passed.")
 

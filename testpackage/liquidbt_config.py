@@ -18,6 +18,6 @@ config.add_format(WheelBinaryDist())
 
 theset.add(config)
 
-liquidbt.main(theset, plugins=[
-    Build()
+liquidbt.main(plugins=[
+    Build(theset)
 ])

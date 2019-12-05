@@ -1,7 +1,10 @@
 class Plugin:
-    def __init__(self):
+    """Typical plugin interface."""
+
+    def __init__(self, *args, **options):
         """Called on initialization of the plugin class."""
-        pass
+        self.args = args
+        self.options = options
 
     def load(self):
         """Called on load of the plugin from within LiquidBT."""
@@ -11,18 +14,21 @@ class Plugin:
         """Called on shutdown of LiquidBT."""
         pass
     
+    @property
     def commands(self):
         """
         Entrypoint to add custom commands.
         
-        Format:
-        {
-            "my-command-name": someFunctionOrLambda
-        }
+        Example:
+            class MyPluginWithCustomCommand(Plugin):
+                @property
+                def commands(self):
+                return {
+                    "my-command-name": someFunctionOrLambda
+                }
 
-        The function must accept the argument b,
-        which will be whatever configuration the
-        user passed, as well as plugins, which will be
+        The function must accept the argument
+        plugins, which will be
         None or a list of Plugin objects.
         You may need to validate the types.
 
@@ -38,6 +44,7 @@ class Plugin:
 
 class TransformerPlugin(Plugin):
     """A Plugin that can transform code."""
+
     def process_code(self, code: str) -> str:
         """
         Called for every file of code.
@@ -56,20 +63,15 @@ class TransformerPlugin(Plugin):
         the code arg.
 
         Transformer example:
-            class MyPlugin(Plugin):
+            class MySecretInjectionPlugin(Plugin):
                 def process_code(
                     self,
                     code: str
                 ) -> str:
-                    # some boolean:
-                    needs_transform = True
-                    if needs_transform:
-                        return code.replace(
-                            "PLACE HOLDER",
-                            "secret123"
-                        )
-                    else:
-                        return code
+                    return code.replace(
+                        "PLACE HOLDER",
+                        "secret123"
+                    )
         """
         return code
 
