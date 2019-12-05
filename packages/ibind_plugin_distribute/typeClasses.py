@@ -1,6 +1,3 @@
-import logging
-
-
 class DistFormat:
     def __init__(self):
         return None
@@ -45,10 +42,7 @@ class BuildConfiguration:
             type(d) is not EggBinaryDist and
             type(d) is not DistInfo
         ):
-            logging.getLogger().error(
-                "Incorrect format specified!"
-            )
-            return
+            raise TypeError("Incorrect format specified!")
         self.formats.append(d)
 
 
@@ -58,16 +52,16 @@ class BuildPackageSet:
 
     def add(self, b: BuildConfiguration):
         if type(b) is not BuildConfiguration:
-            logging.getLogger().error("Failed to add a package to the build set, not instance of BuildConfiguration!")
-            return
+            raise TypeError(
+                "Failed to add a package to the build set, not instance of BuildConfiguration!"
+            )
         self.packages.append(b)
 
     def remove(self, b):
         if type(b) is not BuildConfiguration and type(b) is not int:
-            logging.getLogger().error(
-                "Failed to remove a package from the build set, not instance of BuildConfiguration or int!"
+            raise RuntimeError(
+                "Failed to remove a package from the build set, not BuildConfiguration or int!"
             )
-            return
         if type(b) is int:
             self.packages.pop(b)
         else:

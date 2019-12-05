@@ -7,6 +7,49 @@ class Plugin:
         """Called on load of the plugin from within ibind."""
         pass
 
+    def shutdown(self):
+        """Called on shutdown of ibind."""
+        pass
+    
+    def commands(self):
+        """
+        Entrypoint to add custom commands.
+        
+        Format:
+        {
+            "my-command-name": someFunctionOrLambda
+        }
+
+        The function must accept the argument b,
+        which will be whatever configuration the
+        user passed, as well as plugins, which will be
+        None or a list of Plugin objects.
+        You may need to validate the types.
+
+        If you don't want to add additional commands, just
+        return None for this function.
+        """
+        return {}
+    
+    @property
+    def plugin_type(self):
+        return "typical"
+
+
+def log(message, phase=2, max=6):
+    """
+    Log a message.
+
+    Use the params phase and max to generate
+    a category number for the message, e.g.:
+    
+    [2/6] Doing stuff...
+    """
+    print(f"[{phase}/{max}] {message}")
+
+
+class TransformerPlugin(Plugin):
+    """A Plugin that can transform code."""
     def process_code(self, code: str) -> str:
         """
         Called for every file of code.
@@ -42,24 +85,6 @@ class Plugin:
         """
         return code
 
-    def shutdown(self):
-        """Called on shutdown of ibind."""
-        pass
-    
-    def commands(self):
-        """
-        Entrypoint to add custom commands.
-        
-        Format:
-        {
-            "my-command-name": someFunctionOrLambda
-        }
-
-        The function must accept the argument b,
-        which will be whatever configuration the
-        user passed. You may need to validate the type.
-
-        If you don't want to add additional commands, just
-        return None for this function.
-        """
-        return {}
+    @property
+    def plugin_type(self):
+        return "transformer"

@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+from ibind.plugins import log
 
 
 def create_or_clear(file):
@@ -15,19 +16,20 @@ def write_setup_file(setuptoolsargs, pkgname):
     with open("tmpsetup.py", mode="a") as fh:
         fh.write("""
 import setuptools
-setuptools.setup("""
+setuptools.setup(
+"""
         )
         fh.write(f"\n    name=\"{pkgname}\",")
+        setuptoolsargs["zip_safe"] = False
         for key in setuptoolsargs:
-            if not key == "packages":
-                fh.write(f"\n    {key}=\"{setuptoolsargs[key]}\",")
-            else:
-                fh.write(f"\n    packages=[\"{pkgname}\"],")
+            val = setuptoolsargs[key]
+            if key != "packages":
+                if type(val) == str:
+                    fh.write(f"\n    {key}=\"{val}\",")
+                elif type(val) == bool:
+                    fh.write(f"\n    {key}={str(val)},")
+        fh.write(f"\n    packages=[\"{pkgname}\"]")
         fh.write("\n)")
-
-
-def log(message, phase=2, max=6):
-    print(f"[{phase}/{max}] {message}")
 
 
 def setuptools_launch_wrapper(setuptools_args: str):
