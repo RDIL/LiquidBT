@@ -1,12 +1,11 @@
 import setuptools
-from random import randint
+
+dependencies = open("requirements.txt", "r").readlines()
 
 setuptools.setup(
-    name="ibind",
-    version="0.0.".join(str(randint(1, 100000000))),
+    name="liquidbt",
+    version="0.1.0",
     packages=setuptools.find_packages("packages"),
     package_dir={"": "packages"},
-    install_requires=[
-        "wheel==0.33.6"
-    ]
+    install_requires=dependencies
 )

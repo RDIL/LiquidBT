@@ -4,11 +4,11 @@ class Plugin:
         pass
 
     def load(self):
-        """Called on load of the plugin from within ibind."""
+        """Called on load of the plugin from within LiquidBT."""
         pass
 
     def shutdown(self):
-        """Called on shutdown of ibind."""
+        """Called on shutdown of LiquidBT."""
         pass
     
     def commands(self):
@@ -34,18 +34,6 @@ class Plugin:
     @property
     def plugin_type(self):
         return "typical"
-
-
-def log(message, phase=2, max=6):
-    """
-    Log a message.
-
-    Use the params phase and max to generate
-    a category number for the message, e.g.:
-    
-    [2/6] Doing stuff...
-    """
-    print(f"[{phase}/{max}] {message}")
 
 
 class TransformerPlugin(Plugin):
@@ -88,3 +76,15 @@ class TransformerPlugin(Plugin):
     @property
     def plugin_type(self):
         return "transformer"
+
+
+def log(message, phase=2, max=6):
+    """
+    Log a message.
+
+    Use the params phase and max to generate
+    a category number for the message, e.g.:
+    
+    [2/6] Doing stuff...
+    """
+    print(f"[{phase}/{max}] {message}")

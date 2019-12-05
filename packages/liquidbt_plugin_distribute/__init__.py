@@ -1,4 +1,4 @@
-from ibind.plugins import Plugin, TransformerPlugin, log
+from liquidbt.plugins import Plugin, TransformerPlugin, log
 from .handlers import (
     create_or_clear, unsafely_clean,
     setuptools_launch_wrapper, write_setup_file

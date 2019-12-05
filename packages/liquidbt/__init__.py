@@ -1,7 +1,7 @@
 import os
 import sys
 from . import plugins as PluginInterfaceShaded
-import ibind_plugin_distribute
+import liquidbt_plugin_distribute
 
 __all__ = [
     "main"

@@ -1,7 +1,7 @@
 import os
 import sys
 import shutil
-from ibind.plugins import log
+from liquidbt.plugins import log
 
 
 def create_or_clear(file):
