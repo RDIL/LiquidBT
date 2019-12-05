@@ -1,4 +1,5 @@
-from liquidbt.plugins import Plugin, TransformerPlugin, log
+from liquidbt.plugins import TransformerPlugin
+
 
 class RemoveComments(TransformerPlugin):
     def process_code(self, code: str) -> str:
