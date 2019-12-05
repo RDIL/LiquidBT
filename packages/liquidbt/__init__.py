@@ -1,7 +1,7 @@
 import os
 import sys
 from . import plugins as PluginInterfaceShaded
-import liquidbt_plugin_distribute
+import liquidbt_plugin_build
 
 __all__ = [
     "main"
@@ -28,7 +28,7 @@ def main(b, plugins=[]):
             # build when they want to build it, so if the distribute
             # plugin is active, default to build
             for plugin in plugins:
-                if type(plugin) == ibind_plugin_distribute.Distribute:
+                if type(plugin) == ibind_plugin_build.BuildPlugin:
                     command = "build"
         else:
             raise ValueError("No command specified!")

@@ -1,7 +1,7 @@
 import liquidbt
-from liquidbt_plugin_distribute import (
-    BuildConfiguration, BuildPackageSet, SourceDist, EggBinaryDist,
-    WheelBinaryDist, Distribute
+from liquidbt_plugin_build import (
+    BuildConfiguration, BuildPackageSet, SourceDist,
+    WheelBinaryDist, Build
 )
 
 theset = BuildPackageSet()
@@ -14,11 +14,10 @@ config = BuildConfiguration(
     version="0.0.1"
 )
 config.add_format(SourceDist())
-config.add_format(EggBinaryDist())
 config.add_format(WheelBinaryDist())
 
 theset.add(config)
 
 liquidbt.main(theset, plugins=[
-    Distribute()
+    Build()
 ])

@@ -10,11 +10,11 @@ import shutil
 __all__ = [
     "BuildConfiguration", "BuildPackageSet", "DistFormat",
     "DistInfo", "EggBinaryDist", "WheelBinaryDist", "SourceDist",
-    "Distribute"
+    "Build"
 ]
 
 
-class Distribute(Plugin):
+class Build(Plugin):
     def commands(self):
         return {
             "build": self.entrypoint
