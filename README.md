@@ -5,7 +5,7 @@
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
   <a href="https://gnu.org/licenses/" target="_blank">
-    <img alt="License: GNU General Public License v3" src="https://img.shields.io/badge/License-GNU General Public License Version 3-yellow.svg" />
+    <img alt="License: GNU General Public License v3" src="https://img.shields.io/badge/License-GNU General Public License v3-yellow.svg" />
   </a>
   <a href="https://twitter.com/rdil_pickle" target="_blank">
     <img alt="Twitter: rdil_pickle" src="https://img.shields.io/twitter/follow/rdil_pickle.svg?style=social" />
@@ -32,7 +32,7 @@ pip install liquidbt
 
 * Website: https://rdil.rocks/
 * Twitter: [@rdil_pickle](https://twitter.com/rdil_pickle)
-* Github: [@RDIL](https://github.com/RDIL)
+* GitHub: [@RDIL](https://github.com/RDIL)
 
 ## 🤝 Contributing
 
@@ -40,9 +40,9 @@ Contributions, issues and feature requests are welcome!
 Feel free to check the [issues page](https://github.com/RDIL/liquidbt).
 You can also take a look at the [contributing guide](https://docs.rdil.rocks).
 
-## Show your support
+## ❤️ Show your support
 
-Give a ⭐️ if this project helped you!
+Please give a ⭐️ if this project helped you!
 
 ## 📝 License
 

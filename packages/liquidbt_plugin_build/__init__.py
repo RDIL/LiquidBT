@@ -40,7 +40,7 @@ class Build(Plugin):
         setuptoolsargs: dict = b.setuptools_args
         pkgname = b.pkgname
         # create container we can run this in
-        unsafely_clean(pkgname)
+        unsafely_clean(pkgname, False)
         create_or_clear("tmpsetup.py")
         shutil.copytree(f"{pkgname}.s", pkgname)
         write_setup_file(setuptoolsargs, pkgname)
@@ -56,6 +56,7 @@ class Build(Plugin):
             # clear file
             handle = open(actualfile, "w")
             # have the plugins do their thing
+            log("Triggering transformers", phase=4)
             for plugin in plugins:
                 if plugin.plugin_type == "transformer":
                     e = plugin.process_code(code)
@@ -63,8 +64,8 @@ class Build(Plugin):
                         code = e
                     del e
             handle.write(code)
-        log("Launching setuptools", phase=4)
+        log("Launching setuptools", phase=5)
         setuptools_launch_wrapper(stringbuilder)
-        log("Cleaning up", phase=5)
-        unsafely_clean(pkgname)
-        log("Done!", phase=6)
+        log("Cleaning up", phase=6)
+        unsafely_clean(pkgname, b.keepsrc)
+        log("Done!", phase=7)

@@ -29,9 +29,13 @@ class EggBinaryDist(DistFormat):
 class BuildConfiguration:
     def __init__(self, name, **kwargs):
         self.pkgname = name
+        self.keepsrc = False
         if self.pkgname is None:
             raise Exception("Error initializing build configuration - no package name specified!")
         self.setuptools_args = kwargs
+        if kwargs.get("keep_generated_sources"):
+            self.setuptools_args.pop("keep_generated_sources")
+            self.keepsrc = True
         self.formats = []
 
     def add_format(self, d: DistFormat):
@@ -58,11 +62,8 @@ class BuildPackageSet:
         self.packages.append(b)
 
     def remove(self, b):
-        if type(b) is not BuildConfiguration and type(b) is not int:
+        if type(b) is not BuildConfiguration:
             raise RuntimeError(
-                "Failed to remove a package from the build set, not BuildConfiguration or int!"
+                "Failed to remove a package from the build set, not BuildConfiguration!"
             )
-        if type(b) is int:
-            self.packages.pop(b)
-        else:
-            self.packages.pop(self.packages.index(b))
+        self.packages.pop(self.packages.index(b))

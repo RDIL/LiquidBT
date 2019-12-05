@@ -1,5 +1,7 @@
 import os
 import sys
+# shaded version of the plugin interface to prevent
+# strange issue
 from . import plugins as PluginInterfaceShaded
 import liquidbt_plugin_build
 from typing import List
@@ -12,7 +14,7 @@ plugin_list_type = List[PluginInterfaceShaded.Plugin]
 
 
 def main(plugins: plugin_list_type = []):
-    PluginInterfaceShaded.log("Loading Plugins", phase=1)
+    PluginInterfaceShaded.log("Loading plugins", phase=1)
     if plugins is None:
         plugins = []
 

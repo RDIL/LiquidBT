@@ -41,16 +41,17 @@ def setuptools_launch_wrapper(setuptools_args: str):
         os.system(f"python3 tmpsetup.py --quiet{setuptools_args}")
 
 
-def unsafely_clean(pkgname):
+def unsafely_clean(pkgname, keepsrc):
     """Forcefully clean up."""
     try:
         os.remove("tmpsetup.py")
     except FileNotFoundError:
         pass
-    try:
-        shutil.rmtree(pkgname)
-    except Exception:
-        pass
+    if not keepsrc:
+        try:
+            shutil.rmtree(pkgname)
+        except Exception:
+            pass
     try:
         shutil.rmtree(f"{pkgname}.egg-info")
     except Exception:

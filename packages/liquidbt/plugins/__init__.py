@@ -80,13 +80,13 @@ class TransformerPlugin(Plugin):
         return "transformer"
 
 
-def log(message, phase=2, max=6):
+def log(message, phase=2, max=7):
     """
     Log a message.
 
     Use the params phase and max to generate
     a category number for the message, e.g.:
     
-    [2/6] Doing stuff...
+    [2/7] Doing stuff...
     """
     print(f"[{phase}/{max}] {message}")
