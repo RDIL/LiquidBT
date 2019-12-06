@@ -31,15 +31,15 @@ class Build(Plugin):
         if type(self.b) is BuildPackageSet:
             for thepackage in self.b.packages:
                 log(
-                    f"Building {thepackage.pkgname}",
+                    f"",
                     emoji="build"
                 )
                 self.actions(thepackage, plugins)
         elif type(self.b) is BuildConfiguration:
-            log(f"Building {self.b.thepkgname}", emoji="build")
+            log(f"", emoji="build")
             self.actions(self.b, plugins)
         else:
-            raise Exception("Error running build - Incompatible type passed.")
+            raise Exception("")
 
     @staticmethod
     def actions(b, plugins):
@@ -52,7 +52,7 @@ class Build(Plugin):
         write_setup_file(setuptoolsargs, pkgname)
         stringbuilder = ""
         if b.formats == []:
-            raise RuntimeError(f"No formats specified for package {pkgname}!")
+            raise RuntimeError()
         else:
             for format in b.formats:
                 stringbuilder += f" {str(format)}"

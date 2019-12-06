@@ -1,0 +1,3 @@
+files:
+  - source: /liquidbt_i18n/en_us.json
+    translation: /liquidbt_i18n/%locale_with_underscore%.json

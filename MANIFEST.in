@@ -1,0 +1,2 @@
+include liquidbt_i18n/*.json
+include requirements.txt
