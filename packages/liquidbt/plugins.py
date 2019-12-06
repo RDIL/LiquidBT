@@ -23,9 +23,9 @@ class Plugin:
             class MyPluginWithCustomCommand(Plugin):
                 @property
                 def commands(self):
-                return {
-                    "my-command-name": someFunctionOrLambda
-                }
+                    return {
+                        "my-command-name": someFunctionOrLambda
+                    }
 
         The function must accept the argument
         plugins, which will be

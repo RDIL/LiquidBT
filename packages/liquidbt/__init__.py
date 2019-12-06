@@ -15,8 +15,6 @@ plugin_list_type = List[PluginInterfaceShaded.Plugin]
 
 def main(plugins: plugin_list_type = []):
     PluginInterfaceShaded.log("Loading plugins", phase=1)
-    if plugins is None:
-        plugins = []
 
     build_plugin_present = False
     for plugin in plugins:
@@ -33,9 +31,8 @@ in in the list.
         else:
             plugin.load()
 
-    args = sys.argv
     command = ""
-    for item in args:
+    for item in sys.argv:
         if not item.startswith("-") and not item.endswith(".py"):
             command = item.replace("-", "")
 

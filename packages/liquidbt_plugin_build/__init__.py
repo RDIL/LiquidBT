@@ -49,7 +49,7 @@ class Build(Plugin):
             raise RuntimeError(f"No formats specified for package {pkgname}!")
         else:
             for format in b.formats:
-                stringbuilder += f" {str(format)}"  # space so setuptools doesnt freak
+                stringbuilder += f" {str(format)}"
         for file in os.listdir(pkgname):
             actualfile = f"{pkgname}/{file}"
             code = open(actualfile, "r").read()
@@ -64,6 +64,7 @@ class Build(Plugin):
                         code = e
                     del e
             handle.write(code)
+            handle.close()
         log("Launching setuptools", phase=5)
         setuptools_launch_wrapper(stringbuilder)
         log("Cleaning up", phase=6)

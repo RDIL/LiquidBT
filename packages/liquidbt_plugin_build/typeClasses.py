@@ -1,7 +1,4 @@
 class DistFormat:
-    def __init__(self):
-        return None
-
     def __str__(self) -> str:
         return ""
 
@@ -38,14 +35,8 @@ class BuildConfiguration:
             self.keepsrc = True
         self.formats = []
 
-    def add_format(self, d: DistFormat):
-        if (
-            type(d) is not DistFormat and
-            type(d) is not WheelBinaryDist and
-            type(d) is not SourceDist and
-            type(d) is not EggBinaryDist and
-            type(d) is not DistInfo
-        ):
+    def add_format(self, d):
+        if not isinstance(d, DistFormat):
             raise TypeError("Incorrect format specified!")
         self.formats.append(d)
 
