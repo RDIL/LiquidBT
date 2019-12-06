@@ -1,9 +1,12 @@
-from liquidbt.plugins import Plugin, TransformerPlugin, log
+from liquidbt.plugins import Plugin, log
 from .handlers import (
     create_or_clear, unsafely_clean,
     setuptools_launch_wrapper, write_setup_file
 )
-from .typeClasses import *
+from .typeClasses import (
+    BuildConfiguration, BuildPackageSet, DistFormat,
+    DistInfo, EggBinaryDist, WheelBinaryDist, SourceDist
+)
 import os
 import shutil
 
@@ -27,10 +30,13 @@ class Build(Plugin):
     def entrypoint(self, plugins):
         if type(self.b) is BuildPackageSet:
             for thepackage in self.b.packages:
-                log(f"Building {thepackage.pkgname}")
+                log(
+                    f"Building {thepackage.pkgname}",
+                    emoji="build"
+                )
                 self.actions(thepackage, plugins)
         elif type(self.b) is BuildConfiguration:
-            log(f"Building {self.b.pkgname}")
+            log(f"Building {self.b.thepkgname}", emoji="build")
             self.actions(self.b, plugins)
         else:
             raise Exception("Error running build - Incompatible type passed.")
@@ -56,7 +62,7 @@ class Build(Plugin):
             # clear file
             handle = open(actualfile, "w")
             # have the plugins do their thing
-            log("Triggering transformers", phase=4)
+            log("Triggering transformers", phase=4, emoji="transform")
             for plugin in plugins:
                 if plugin.plugin_type == "transformer":
                     e = plugin.process_code(code)
@@ -65,8 +71,8 @@ class Build(Plugin):
                     del e
             handle.write(code)
             handle.close()
-        log("Launching setuptools", phase=5)
+        log("Launching setuptools", phase=5, emoji="launch")
         setuptools_launch_wrapper(stringbuilder)
-        log("Cleaning up", phase=6)
+        log("Cleaning up", phase=6, emoji="clean")
         unsafely_clean(pkgname, b.keepsrc)
-        log("Done!", phase=7)
+        log("Done!", phase=7, emoji="done")

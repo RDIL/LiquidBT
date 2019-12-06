@@ -1,3 +1,5 @@
+"""Utilities."""
+
 import os
 import sys
 import shutil
@@ -12,15 +14,19 @@ def create_or_clear(file):
 
 
 def write_setup_file(setuptoolsargs, pkgname):
-    log(f"Writing setuptools confguration for {pkgname}", phase=3)
+    log(
+        f"Writing setuptools confguration for {pkgname}",
+        phase=3,
+        emoji="write"
+    )
     with open("tmpsetup.py", mode="a") as fh:
         fh.write("""
 import setuptools
 setuptools.setup(
-"""
-        )
+""")
         fh.write(f"\n    name=\"{pkgname}\",")
         setuptoolsargs["zip_safe"] = False
+        setuptoolsargs["include_package_data"] = True
         for key in setuptoolsargs:
             val = setuptoolsargs[key]
             if key != "packages":
@@ -33,8 +39,7 @@ setuptools.setup(
 
 
 def setuptools_launch_wrapper(setuptools_args: str):
-    """Launches setuptools with the given arguments."""
-
+    """Launch setuptools with the given arguments."""
     if "nt" in sys.platform.lower():
         os.system(f"python tmpsetup.py --quiet{setuptools_args}")
     else:
@@ -42,7 +47,7 @@ def setuptools_launch_wrapper(setuptools_args: str):
 
 
 def unsafely_clean(pkgname, keepsrc):
-    """Forcefully clean up."""
+    """Force clean up."""
     try:
         os.remove("tmpsetup.py")
     except FileNotFoundError:

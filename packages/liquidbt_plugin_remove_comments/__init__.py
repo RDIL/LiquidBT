@@ -8,6 +8,7 @@ class RemoveComments(TransformerPlugin):
 
     Note: this only removes comments, not docstrings.
     """
+
     def process_code(self, code: str) -> str:
         lines = code.splitlines()
         for line in lines:

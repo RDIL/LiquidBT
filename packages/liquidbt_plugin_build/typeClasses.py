@@ -28,7 +28,11 @@ class BuildConfiguration:
         self.pkgname = name
         self.keepsrc = False
         if self.pkgname is None:
-            raise Exception("Error initializing build configuration - no package name specified!")
+            raise Exception(
+                """
+Error initializing build configuration.
+No package name specified!
+""")
         self.setuptools_args = kwargs
         if kwargs.get("keep_generated_sources"):
             self.setuptools_args.pop("keep_generated_sources")
@@ -48,13 +52,13 @@ class BuildPackageSet:
     def add(self, b: BuildConfiguration):
         if type(b) is not BuildConfiguration:
             raise TypeError(
-                "Failed to add a package to the build set, not instance of BuildConfiguration!"
+                "Failed to add a package to the build set, wrong type!"
             )
         self.packages.append(b)
 
     def remove(self, b):
         if type(b) is not BuildConfiguration:
             raise RuntimeError(
-                "Failed to remove a package from the build set, not BuildConfiguration!"
+                "Failed to remove a package from the build set, wrong type!"
             )
         self.packages.pop(self.packages.index(b))

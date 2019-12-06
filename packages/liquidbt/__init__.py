@@ -1,20 +1,20 @@
-import os
+"""LiquidBT entrypoint."""
+
 import sys
-# shaded version of the plugin interface to prevent
-# strange issue
-from . import plugins as PluginInterfaceShaded
 import liquidbt_plugin_build
+from .plugins import log, Plugin
 from typing import List
 
 __all__ = [
     "main", "plugin_list_type"
 ]
 
-plugin_list_type = List[PluginInterfaceShaded.Plugin]
+plugin_list_type = List[Plugin]
 
 
 def main(plugins: plugin_list_type = []):
-    PluginInterfaceShaded.log("Loading plugins", phase=1)
+    """Runtime."""
+    log("Loading plugins", phase=1, emoji="load")
 
     build_plugin_present = False
     for plugin in plugins:
@@ -37,7 +37,8 @@ in in the list.
             command = item.replace("-", "")
 
     if command == "":
-        if type(plugins) == list and len(plugins) != 0 and build_plugin_present:
+        if type(plugins) == list and len(plugins) != 0 \
+                                and build_plugin_present:
             # hacky way to say that most users want to not need to say
             # build when they want to build it, so if the build
             # plugin is active, default to it's command

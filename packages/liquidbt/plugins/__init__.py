@@ -1,3 +1,6 @@
+import os
+
+
 class Plugin:
     """Typical plugin interface."""
 
@@ -13,12 +16,12 @@ class Plugin:
     def shutdown(self):
         """Called on shutdown of LiquidBT."""
         pass
-    
+
     @property
     def commands(self):
         """
         Entrypoint to add custom commands.
-        
+
         Example:
             class MyPluginWithCustomCommand(Plugin):
                 @property
@@ -36,7 +39,7 @@ class Plugin:
         return None for this function.
         """
         return {}
-    
+
     @property
     def plugin_type(self):
         return "typical"
@@ -80,13 +83,28 @@ class TransformerPlugin(Plugin):
         return "transformer"
 
 
-def log(message, phase=2, max=7):
+def log(message, phase=2, max=7, emoji=""):
     """
     Log a message.
 
     Use the params phase and max to generate
     a category number for the message, e.g.:
-    
+
     [2/7] Doing stuff...
     """
-    print(f"[{phase}/{max}] {message}")
+    if os.getenv("CI") is not None:
+        print(f"[{phase}/{max}] {message}")
+    else:
+        print(f"{emotes[emoji]} [{phase}/{max}] {message}")
+
+
+emotes = {
+    "": "",
+    "load": "📥",
+    "build": "🛠",
+    "write": "📝",
+    "transform": "⛓",
+    "launch": "📡",
+    "clean": "🧽",
+    "done": "🎉"
+}
