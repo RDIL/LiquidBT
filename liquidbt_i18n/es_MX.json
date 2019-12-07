@@ -1,6 +1,6 @@
 {
-    "errors.transformerLoadWithoutBuildPlugin": "You tried to load a transformer without the build plugin! Ensure you define the build plugin before any transformers in in the list.",
-    "errors.noCommand": "No command specified!",
+    "errors.transformerLoadWithoutBuildPlugin": "¡Has intentado descargar un transformador sin el plugin de compilación! Asegúrate de definir el plugin de compilación antes de cualquier transformadores en la lista.",
+    "errors.noCommand": "¡Ningún comando especificado!",
     "errors.build.badType": "Error running build - incompatible type passed.",
     "errors.build.noType": "No formats specified for package {}!",
     "build.building": "Building {}",
