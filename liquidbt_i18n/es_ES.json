@@ -1,12 +1,12 @@
 {
-    "errors.transformerLoadWithoutBuildPlugin": "You tried to load a transformer without the build plugin! Ensure you define the build plugin before any transformers in in the list.",
-    "errors.noCommand": "No command specified!",
-    "errors.build.badType": "Error running build - incompatible type passed.",
-    "errors.build.noType": "No formats specified for package {}!",
-    "build.building": "Building {}",
-    "build.loadPlugins": "Loading plugins",
-    "build.transform": "Triggering transformers",
-    "build.launchSetuptools": "Launching setuptools",
-    "build.clean": "Cleaning up",
-    "build.done": "Finished!"
+    "errors.transformerLoadWithoutBuildPlugin": "¡Has intentado descargar un transformador sin el complemento de compilación! Asegúrate de definir el complemento de compilación antes de cualquier transformador en la lista.",
+    "errors.noCommand": "¡No se especificó ninguna acción!",
+    "errors.build.badType": "Error al ejecutar construcción - tipo incompatible descartado.",
+    "errors.build.noType": "¡No hay formatos especificados para el paquete {}!",
+    "build.building": "Construyendo {}",
+    "build.loadPlugins": "Cargando complementos",
+    "build.transform": "Desencadenando transformadores",
+    "build.launchSetuptools": "Ejecutando setuptools",
+    "build.clean": "Limpiando",
+    "build.done": "¡Terminado!"
 }
