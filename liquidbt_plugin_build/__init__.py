@@ -27,22 +27,29 @@ class Build(Plugin):
             "build": self.entrypoint
         }
 
-    def entrypoint(self, plugins):
+    def entrypoint(self, plugins, locale):
         if type(self.b) is BuildPackageSet:
             for thepackage in self.b.packages:
                 log(
-                    f"",
+                    locale["build.building"].format(
+                        thepackage.pkgname
+                    ),
                     emoji="build"
                 )
-                self.actions(thepackage, plugins)
+                self.actions(thepackage, plugins, locale)
         elif type(self.b) is BuildConfiguration:
-            log(f"", emoji="build")
-            self.actions(self.b, plugins)
+            log(
+                locale["build.building"].format(
+                    self.b.pkgname
+                ),
+                emoji="build"
+            )
+            self.actions(self.b, plugins, locale)
         else:
             raise Exception("")
 
     @staticmethod
-    def actions(b, plugins):
+    def actions(b, plugins, locale):
         setuptoolsargs: dict = b.setuptools_args
         pkgname = b.pkgname
         # create container we can run this in
@@ -62,7 +69,10 @@ class Build(Plugin):
             # clear file
             handle = open(actualfile, "w")
             # have the plugins do their thing
-            log("Triggering transformers", phase=4, emoji="transform")
+            log(
+                locale["build.transform"],
+                phase=4, emoji="transform"
+            )
             for plugin in plugins:
                 if plugin.plugin_type == "transformer":
                     e = plugin.process_code(code)
@@ -71,8 +81,11 @@ class Build(Plugin):
                     del e
             handle.write(code)
             handle.close()
-        log("Launching setuptools", phase=5, emoji="launch")
+        log(
+            locale["build.launchSetuptools"],
+            phase=5, emoji="launch"
+        )
         setuptools_launch_wrapper(stringbuilder)
-        log("Cleaning up", phase=6, emoji="clean")
+        log(locale["build.clean"], phase=6, emoji="clean")
         unsafely_clean(pkgname, b.keepsrc)
-        log("Done!", phase=7, emoji="done")
+        log(locale["build.done"], phase=7, emoji="done")

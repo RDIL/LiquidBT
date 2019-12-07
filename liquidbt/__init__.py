@@ -44,7 +44,9 @@ def main(plugins: plugin_list_type = []):
             build_plugin_present = True
 
         if plugin.plugin_type == "transformer" and not build_plugin_present:
-            raise EnvironmentError()
+            raise EnvironmentError(locale[
+                "errors.transformerLoadWithoutBuildPlugin"
+            ])
         else:
             plugin.load()
 
@@ -61,10 +63,10 @@ def main(plugins: plugin_list_type = []):
             # plugin is active, default to it's command
             command = "build"
         else:
-            raise ValueError()
+            raise ValueError(locale["errors.noCommand"])
 
     for plugin in plugins:
         for key in plugin.commands.keys():
             if command == key:
-                plugin.commands[command](plugins)
+                plugin.commands[command](plugins, locale)
         plugin.shutdown()
