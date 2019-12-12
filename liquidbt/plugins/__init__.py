@@ -1,4 +1,5 @@
 import os
+import typing
 
 
 class Plugin:
@@ -18,7 +19,7 @@ class Plugin:
         pass
 
     @property
-    def commands(self):
+    def commands(self) -> typing.Dict[str, typing.Callable]:
         """
         Entrypoint to add custom commands.
 
