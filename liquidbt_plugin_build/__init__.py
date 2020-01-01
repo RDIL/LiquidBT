@@ -9,6 +9,7 @@ from .typeClasses import (
 )
 import os
 import shutil
+from typing import Dict, Union
 
 __all__ = [
     "BuildConfiguration", "BuildPackageSet", "DistFormat",
@@ -18,7 +19,7 @@ __all__ = [
 
 
 class Build(Plugin):
-    def __init__(self, b):
+    def __init__(self, b: Union[BuildConfiguration, BuildPackageSet]):
         self.b = b
 
     @property
@@ -27,9 +28,9 @@ class Build(Plugin):
             "build": self.entrypoint
         }
 
-    def entrypoint(self, plugins, locale):
+    def entrypoint(self, plugins, locale: Dict[str, str]):
         if type(self.b) is BuildPackageSet:
-            for thepackage in self.b.packages:
+            for thepackage in self.b.packages:  # type: ignore
                 log(
                     locale["build.building"].format(
                         thepackage.pkgname
@@ -40,7 +41,7 @@ class Build(Plugin):
         elif type(self.b) is BuildConfiguration:
             log(
                 locale["build.building"].format(
-                    self.b.pkgname
+                    self.b.pkgname  # type: ignore
                 ),
                 emoji="build"
             )

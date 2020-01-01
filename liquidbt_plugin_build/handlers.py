@@ -40,10 +40,7 @@ setuptools.setup(
 
 def setuptools_launch_wrapper(setuptools_args: str):
     """Launch setuptools with the given arguments."""
-    if "nt" in sys.platform.lower():
-        os.system(f"python tmpsetup.py --quiet{setuptools_args}")
-    else:
-        os.system(f"python3 tmpsetup.py --quiet{setuptools_args}")
+    os.system(f"{sys.executable} tmpsetup.py --quiet{setuptools_args}")
 
 
 def unsafely_clean(pkgname, keepsrc):

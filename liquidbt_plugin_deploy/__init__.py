@@ -35,5 +35,4 @@ class Repository:
     def upload(self):
         repo = f"--repository-url {self.url}"
         creds = f"-u {self._credentials[0]} -p {self._credentials[1]}"
-        cmd = "python3" if sys.platform != "nt" else "python"
-        os.system(f"{cmd} -m twine upload dist/* {repo} {creds}")
+        os.system(f"{sys.executable} -m twine upload dist/* {repo} {creds}")
