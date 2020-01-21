@@ -33,9 +33,9 @@ def load_translations(identifier: str = "en_us"):
 plugin_list_type = List[Plugin]
 
 
-def main(plugins: plugin_list_type = []):
+def main(plugins: plugin_list_type = [], lang: str = "en_us"):
     """Runtime."""
-    locale = load_translations()
+    locale = load_translations(lang)
     log(locale["build.loadPlugins"], phase=1, emoji="load")
 
     build_plugin_present = False

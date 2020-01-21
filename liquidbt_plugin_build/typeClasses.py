@@ -18,11 +18,6 @@ class DistInfo(DistFormat):
         return "dist_info"
 
 
-class EggBinaryDist(DistFormat):
-    def __str__(self) -> str:
-        return "bdist_egg"
-
-
 class BuildConfiguration:
     def __init__(self, name, **kwargs):
         self.pkgname = name

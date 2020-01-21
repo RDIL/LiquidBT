@@ -49,6 +49,10 @@ class Plugin:
 class TransformerPlugin(Plugin):
     """A Plugin that can transform code."""
 
+    def on_build_begin(self):
+        """Run when the build starts."""
+        return
+
     def process_code(self, code: str) -> str:
         """
         Called for every file of code.

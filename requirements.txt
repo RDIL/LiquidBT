@@ -1,1 +1,2 @@
 wheel==0.33.6
+requests==2.22.0
