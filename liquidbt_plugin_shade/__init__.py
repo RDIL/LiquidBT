@@ -1,38 +1,21 @@
 from liquidbt.plugins import Plugin, TransformerPlugin
 from requests import get
-from typing import List
 import gzip
 import tarfile
 import shutil
 import random
 
 
-# bpb stands for build plugin bridge
-class BuildPluginBridge:
-    def __init__(self, buildplugin, buildconfiguration):
-        self.bp = buildplugin
-        self.bc = buildconfiguration
-
-
 class Package:
-    def __init__(self, name, url, bpb):
+    def __init__(self, name, url):
         self.name = name
         self.url = url
-        self.bpb = bpb
 
 
 class Shade(Plugin):
-    def __init__(
-        self,
-        bpb: BuildPluginBridge,
-        packages: List[Package] = [],
-    ):
-        self.packages = packages
-        self.bpb = bpb
-
-    def shade(self):
+    def shade(self, bps):
         """Runtime."""
-        for package in self.packages:
+        for package in bps.b.data["shade_packages"]:
             tarname = f"{package.name}.tar"
 
             open(tarname, mode="wb").write(
@@ -48,17 +31,16 @@ class Shade(Plugin):
 
             shutil.copytree(
                 package.name,
-                "/".join([self.bpb.bc.pkgname, name_of_shade])
+                name_of_shade
             )
 
-            create_transformer(self.bpb, {
+            _create_transformer(self.bp, {
                 "old": package.name,
                 "new": name_of_shade
             })
 
 
-def create_transformer(bpb, textdata):
-    assert type(bpb) == BuildPluginBridge
+def _create_transformer(bp, textdata):
     t = TransformerPlugin()
 
     def process_code(self, code: str):
@@ -66,4 +48,4 @@ def create_transformer(bpb, textdata):
 
     t.process_code = process_code
 
-    bpb.bp.use_transformer(t)
+    bp.use_transformer(t)

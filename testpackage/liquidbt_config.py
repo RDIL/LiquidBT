@@ -4,12 +4,12 @@ from liquidbt_plugin_build import (
     WheelBinaryDist, Build
 )
 from liquidbt_plugin_remove_comments import RemoveComments
-from liquidbt_plugin_shade import Shade, BuildPluginBridge, Package
+from liquidbt_plugin_shade import Shade, Package
 
 theset = BuildPackageSet()
 
 config = BuildConfiguration(
-    "testpackagerdil",
+    name="testpackagerdil",
     author="rdil",
     author_email="me@rdil.rocks",
     url="example.com",
@@ -20,19 +20,19 @@ config.add_format(WheelBinaryDist())
 
 theset.add(config)
 
-bp = Build(theset)
-bridge = BuildPluginBridge(config, bp)
-
 shaded_packages = [
     Package(
         "slots",
-        "https://rdil.mycloudrepo.io/public/repositories/cakebot/slots/slots-1.3.tar.gz",  # noqa
-        bridge
+        "https://rdil.mycloudrepo.io/public/repositories/cakebot/slots/slots-1.3.tar.gz"  # noqa
     )
 ]
 
+theset.data["shade_packages"] = shaded_packages
+
+bp = Build(theset)
+
 liquidbt.main(plugins=[
     bp,
-    RemoveComments(),
-    Shade(bridge, shaded_packages)
+    Shade(bp),
+    RemoveComments()
 ])

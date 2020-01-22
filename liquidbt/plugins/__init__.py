@@ -5,10 +5,10 @@ import typing
 class Plugin:
     """Typical plugin interface."""
 
-    def __init__(self, *args, **options):
+    def __init__(self, *args, **kwargs):
         """Called on initialization of the plugin class."""
         self.args = args
-        self.options = options
+        self.kwargs = kwargs
 
     def load(self):
         """Called on load of the plugin from within LiquidBT."""

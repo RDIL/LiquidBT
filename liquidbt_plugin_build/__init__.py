@@ -1,4 +1,4 @@
-from liquidbt.plugins import Plugin, TransformerPlugin, log
+from liquidbt.plugins import Plugin, log
 from .handlers import (
     create_or_clear, unsafely_clean,
     setuptools_launch_wrapper, write_setup_file
@@ -9,7 +9,7 @@ from .typeClasses import (
 )
 import os
 import shutil
-from typing import Dict, Union, List
+from typing import Union
 import liquidbt_plugin_shade
 
 __all__ = [
@@ -19,9 +19,15 @@ __all__ = [
 
 
 class Build(Plugin):
-    def __init__(self, b: Union[BuildConfiguration, BuildPackageSet]):
+    def __init__(
+        self,
+        b: Union[BuildConfiguration, BuildPackageSet],
+        *args,
+        **kwargs
+    ):
         self.b = b
-        self.mant: List[TransformerPlugin] = []
+        self.kwargs = kwargs
+        self._mant = []  # type: ignore
 
     @property
     def commands(self):
@@ -29,7 +35,10 @@ class Build(Plugin):
             "build": self.entrypoint
         }
 
-    def entrypoint(self, plugins, locale: Dict[str, str]):
+    def entrypoint(self, plugins, locale):
+        self.plugins = plugins
+        self.locale = locale
+
         if type(self.b) is BuildPackageSet:
             for thepackage in self.b.packages:  # type: ignore
                 log(
@@ -38,7 +47,8 @@ class Build(Plugin):
                     ),
                     emoji="build"
                 )
-                self.actions(thepackage, plugins, locale, self.mant)
+                self.actions(thepackage)
+
         elif type(self.b) is BuildConfiguration:
             log(
                 locale["build.building"].format(
@@ -46,12 +56,16 @@ class Build(Plugin):
                 ),
                 emoji="build"
             )
-            self.actions(self.b, plugins, locale, self.mant)
+            self.actions(self.b)
+
         else:
             raise Exception("Bad type")
 
-    @staticmethod
-    def actions(b, plugins, locale, mant):
+    def actions(self, p):
+        b = p
+        plugins = self.plugins
+        locale = self.locale
+
         setuptoolsargs: dict = b.setuptools_args
         pkgname = b.pkgname
         # create container we can run this in
@@ -61,7 +75,7 @@ class Build(Plugin):
         write_setup_file(setuptoolsargs, pkgname)
         for plugin in plugins:
             if type(plugin) == liquidbt_plugin_shade.Shade:
-                plugin.shade()
+                plugin.shade(self)
         stringbuilder = ""
         if b.formats == []:
             raise RuntimeError()
@@ -85,7 +99,7 @@ class Build(Plugin):
                         code = e
                     del e
             # internal stuff, please ignore
-            for plugin in mant:
+            for plugin in self._mant:
                 e = plugin.process_code(code)
                 if e is not None and type(e) == str:
                     code = e
@@ -106,4 +120,4 @@ class Build(Plugin):
         Manually injects a transformer.
         **Please don't use this.**
         """
-        self.mant.append(t)
+        self._mant.append(t)
