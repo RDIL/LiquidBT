@@ -5,7 +5,7 @@ from .handlers import (
 )
 from .typeClasses import (
     BuildConfiguration, BuildPackageSet, DistFormat,
-    DistInfo, WheelBinaryDist, SourceDist
+    WheelBinaryDist, SourceDist
 )
 import os
 import shutil
@@ -14,11 +14,13 @@ import liquidbt_plugin_shade
 
 __all__ = [
     "BuildConfiguration", "BuildPackageSet", "DistFormat",
-    "DistInfo", "WheelBinaryDist", "SourceDist", "Build"
+    "WheelBinaryDist", "SourceDist", "Build"
 ]
 
 
 class Build(Plugin):
+    b: Union[BuildConfiguration, BuildPackageSet]
+
     def __init__(
         self,
         b: Union[BuildConfiguration, BuildPackageSet],
@@ -27,7 +29,7 @@ class Build(Plugin):
     ):
         self.b = b
         self.kwargs = kwargs
-        self._mant = []  # type: ignore
+        self._manual_triggers = []  # type: ignore
 
     @property
     def commands(self):
@@ -98,8 +100,8 @@ class Build(Plugin):
                     if e is not None and type(e) == str:
                         code = e
                     del e
-            # internal stuff, please ignore
-            for plugin in self._mant:
+            # internal stuff for certain plugins to work
+            for plugin in self._manual_triggers:
                 e = plugin.process_code(code)
                 if e is not None and type(e) == str:
                     code = e
@@ -120,4 +122,4 @@ class Build(Plugin):
         Manually injects a transformer.
         **Please don't use this.**
         """
-        self._mant.append(t)
+        self._manual_triggers.append(t)

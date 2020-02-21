@@ -3,6 +3,7 @@
 import os
 import sys
 import shutil
+import textwrap
 from liquidbt.plugins import log
 
 
@@ -20,10 +21,10 @@ def write_setup_file(setuptoolsargs, pkgname):
         emoji="write"
     )
     with open("tmpsetup.py", mode="a") as fh:
-        fh.write("""
-import setuptools
-setuptools.setup(
-""")
+        fh.write(textwrap.dedent("""
+            import setuptools
+            setuptools.setup(
+        """))
         fh.write(f"\n    name=\"{pkgname}\",")
         setuptoolsargs["zip_safe"] = False
         setuptoolsargs["include_package_data"] = True

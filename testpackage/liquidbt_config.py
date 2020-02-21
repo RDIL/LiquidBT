@@ -12,7 +12,7 @@ config = BuildConfiguration(
     name="testpackagerdil",
     author="rdil",
     author_email="me@rdil.rocks",
-    url="example.com",
+    url="https://example.com",
     version="0.0.1"
 )
 config.add_format(SourceDist())
@@ -33,6 +33,5 @@ bp = Build(theset)
 
 liquidbt.main(plugins=[
     bp,
-    Shade(bp),
     RemoveComments()
 ])
