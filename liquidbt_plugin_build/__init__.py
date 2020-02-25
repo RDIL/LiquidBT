@@ -9,7 +9,7 @@ from .typeClasses import (
 )
 import os
 import shutil
-from typing import Union, List
+from typing import List
 
 
 __all__ = [
