@@ -98,8 +98,9 @@ class Build(Plugin):
 
         setuptools_launch_wrapper(stringbuilder)
 
-        log(locale["build.clean"], phase=6, emoji="clean")
-        unsafely_clean(pkgname, package.keepsrc)
+        if os.getenv("DEBUG_NO_CLEAN_ON_END") is None:
+            log(locale["build.clean"], phase=6, emoji="clean")
+            unsafely_clean(pkgname, package.keepsrc)
 
         log(locale["build.done"], phase=7, emoji="done")
 

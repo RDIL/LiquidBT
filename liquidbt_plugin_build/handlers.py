@@ -26,6 +26,7 @@ def write_setup_file(setuptoolsargs, pkgname):
             setuptools.setup(
         """))
         fh.write(f"\n    name=\"{pkgname}\",")
+        setuptoolsargs.pop("name")
         setuptoolsargs["zip_safe"] = False
         setuptoolsargs["include_package_data"] = True
         for key in setuptoolsargs:
@@ -46,6 +47,7 @@ def setuptools_launch_wrapper(setuptools_args: str):
 
 def unsafely_clean(pkgname, keepsrc):
     """Force clean up."""
+
     try:
         os.remove("tmpsetup.py")
     except FileNotFoundError:

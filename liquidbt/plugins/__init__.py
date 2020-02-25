@@ -19,12 +19,16 @@ class Plugin:
         pass
 
     @property
+    def name(self) -> str:
+        return "Unnamed"
+
+    @property
     def commands(self) -> typing.Dict[str, typing.Callable]:
         """
         Entrypoint to add custom commands.
 
         Example:
-            class MyPluginWithCustomCommand(Plugin):
+            class CustomCommand(Plugin):
                 @property
                 def commands(self):
                     return {
@@ -36,14 +40,24 @@ class Plugin:
         None or a list of Plugin objects.
         You may need to validate the types.
 
-        If you don't want to add additional commands, just
-        return None for this function.
+        If you don't want to add additional commands,
+        don't override this function.
         """
         return {}
 
     @property
     def plugin_type(self):
         return "typical"
+
+    def get_build_plugin(self, plugins: list):
+        """Finds the build plugin in the list of plugins."""
+
+        from liquidbt_plugin_build import Build
+    
+        for plugin in plugins:
+            if type(plugin) == Build:
+                return plugin
+        return None
 
 
 class TransformerPlugin(Plugin):
