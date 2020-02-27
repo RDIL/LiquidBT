@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 import textwrap
-from liquidbt.plugins import log
+from liquidbt.plugins import log, log_continued_message
 
 
 def create_or_clear(file):
@@ -15,10 +15,8 @@ def create_or_clear(file):
 
 
 def write_setup_file(setuptoolsargs, pkgname):
-    log(
-        f"Writing setuptools confguration for {pkgname}",
-        phase=3,
-        emoji="write"
+    log_continued_message(
+        f"Writing setuptools confguration for {pkgname}"
     )
     with open("tmpsetup.py", mode="a") as fh:
         fh.write(textwrap.dedent("""

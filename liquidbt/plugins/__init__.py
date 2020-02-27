@@ -112,16 +112,20 @@ def log(message, phase=2, max=7, emoji=""):
     [2/7] Doing stuff...
     """
     if os.getenv("CI") is not None:
-        print(f"[{phase}/{max}] {message}")
+        print(f"[{phase}/{max}]  {message}")
     else:
-        print(f"{emotes[emoji]} [{phase}/{max}] {message}")
+        print(f"[{phase}/{max}] {emotes[emoji]}  {message}")
+
+
+def log_continued_message(message):
+    """Log a continued message from the previous message (just a style thing)."""
+    print(f"         {message}")
 
 
 emotes = {
     "": "",
     "load": "📥",
     "build": "🛠",
-    "write": "📝",
     "transform": "⛓",
     "launch": "📡",
     "clean": "🧽",

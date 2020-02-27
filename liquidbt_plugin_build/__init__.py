@@ -1,4 +1,4 @@
-from liquidbt.plugins import Plugin, log
+from liquidbt.plugins import Plugin, log, log_continued_message
 from .handlers import (
     create_or_clear, unsafely_clean,
     setuptools_launch_wrapper, write_setup_file
@@ -14,23 +14,29 @@ from typing import List
 
 __all__ = [
     "PackageConfig", "DistFormat", "WheelBinaryDist",
-    "SourceDist", "Build", "_package_list_type"
+    "SourceDist", "Build", "_package_list_type",
+    "_file_list_type"
 ]
 
 _package_list_type = List[PackageConfig]
+_file_list_type = List[str]
 
 
 class Build(Plugin):
-    b: _package_list_type
+    packages: _package_list_type
+    files: _file_list_type
+    kwargs: dict
 
     def __init__(
         self,
-        packages: _package_list_type,
+        packages: _package_list_type = [],
+        files: List[str] = [],
         *args,
         **kwargs
     ):
         self.packages = packages
         self.kwargs = kwargs
+        self.files = files
         self._manual_triggers = []  # type: ignore
 
     @property
@@ -43,6 +49,12 @@ class Build(Plugin):
         self.plugins = plugins
         self.locale = locale
 
+        for afile in self.files:
+            log(
+                locale["build.building"].format(afile),
+                emoji="build"
+            )
+            self.actions_exclusive_to_named_file(afile)
         for thepackage in self.packages:
             log(
                 locale["build.building"].format(
@@ -78,9 +90,8 @@ class Build(Plugin):
             # clear file
             handle = open(actualfile, "w")
             # have the plugins do their thing
-            log(
-                locale["build.transform"],
-                phase=4, emoji="transform"
+            log_continued_message(
+                locale["build.transform"]
             )
             for plugin in plugins + self._manual_triggers:
                 if plugin.plugin_type == "transformer":
@@ -103,6 +114,23 @@ class Build(Plugin):
             unsafely_clean(pkgname, package.keepsrc)
 
         log(locale["build.done"], phase=7, emoji="done")
+
+    def actions_exclusive_to_named_file(self, file):
+        code = open(file, "r").read()
+        # clear file
+        handle = open(file.replace(".py", "") + "_dist.py", "w")
+        # have the plugins do their thing
+        log_continued_message(
+            self.locale["build.transform"]
+        )
+        for plugin in self.plugins:
+            if plugin.plugin_type == "transformer":
+                e = plugin.process_code(code)
+                if e is not None and type(e) == str:
+                    code = e
+                del e
+        handle.write(code)
+        handle.close()
 
     def use_transformer(self, t):
         """
