@@ -24,16 +24,20 @@ def write_setup_file(setuptoolsargs, pkgname):
             setuptools.setup(
         """))
         fh.write(f"\n    name=\"{pkgname}\",")
-        setuptoolsargs.pop("name")
         setuptoolsargs["zip_safe"] = False
         setuptoolsargs["include_package_data"] = True
         for key in setuptoolsargs:
             val = setuptoolsargs[key]
-            if key != "packages":
-                if type(val) == str:
-                    fh.write(f"\n    {key}=\"{val}\",")
-                elif type(val) == bool:
-                    fh.write(f"\n    {key}={str(val)},")
+            if type(val) == str:
+                fh.write(f"\n    {key}=\"{val}\",")
+            elif type(val) == bool:
+                fh.write(f"\n    {key}={str(val)},")
+            elif type(val) == dict:
+                # something like package_data will be a dict
+                fh.write("\n    " + key + "={")
+                for option in val:
+                    fh.write(f"\n        {option}: \"{val[option]}\",")
+                fh.write("\n    }")
         fh.write(f"\n    packages=[\"{pkgname}\"]")
         fh.write("\n)")
 
