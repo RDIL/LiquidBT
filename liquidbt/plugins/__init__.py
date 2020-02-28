@@ -1,5 +1,5 @@
 import os
-import typing
+from typing import Dict, Callable
 
 
 class Plugin:
@@ -23,7 +23,7 @@ class Plugin:
         return "Unnamed"
 
     @property
-    def commands(self) -> typing.Dict[str, typing.Callable]:
+    def commands(self) -> Dict[str, Callable]:
         """
         Entrypoint to add custom commands.
 
@@ -35,10 +35,9 @@ class Plugin:
                         "my-command-name": someFunctionOrLambda
                     }
 
-        The function must accept the argument
-        plugins, which will be
-        None or a list of Plugin objects.
-        You may need to validate the types.
+        The function for the command must accept:
+            * plugins (type: List[Union[Plugin, None]])
+            * locale (type: Dict[str, Any])
 
         If you don't want to add additional commands,
         don't override this function.
@@ -49,7 +48,8 @@ class Plugin:
     def plugin_type(self):
         return "typical"
 
-    def get_build_plugin(self, plugins: list):
+    @staticmethod
+    def get_build_plugin(plugins: list):
         """Finds the build plugin in the list of plugins."""
 
         from liquidbt_plugin_build import Build
@@ -102,7 +102,7 @@ class TransformerPlugin(Plugin):
         return "transformer"
 
 
-def log(message, phase=2, max=7, emoji=""):
+def log(message: str, phase: int = 2, max: int = 7, emoji: str = ""):
     """
     Log a message.
 
@@ -117,7 +117,7 @@ def log(message, phase=2, max=7, emoji=""):
         print(f"[{phase}/{max}] {emotes[emoji]}  {message}")
 
 
-def log_continued_message(message):
+def log_continued_message(message: str):
     """Log a continued message from the previous message (just a style thing)."""
     print(f"         {message}")
 
