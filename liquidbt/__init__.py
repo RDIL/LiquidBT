@@ -33,15 +33,24 @@ def load_translations(identifier: str = "en_us"):
 plugin_list_type = List[Plugin]
 
 
-def main(packages, plugins: plugin_list_type = [], lang: str = "en_us"):
+def main(packages=None, files=None, plugins: plugin_list_type = [], lang: str = "en_us"):
     """Runtime."""
+
+    if files is None:
+        files = []
+    if packages is None:
+        packages = []
+
+    if packages == [] and files == [] and plugins == []:
+        raise RuntimeError(
+            "You need to add build config(s), or plugins to the liquidbt.main arguments!"
+        )
 
     locale = load_translations(lang)
     ctx = RunContext(locale)
 
-    ctx.log(locale["build.loadPlugins", emoji="load")
+    ctx.log(locale["build.loadPlugins"], emoji="load")
 
-    build_plugin_present = False
     for plugin in plugins:
         if type(plugin) == liquidbt_plugin_build.Build:
             ctx.build_plugin = plugin

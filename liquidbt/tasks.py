@@ -32,11 +32,13 @@ class Task:
         self.run()
 
     def run_subtask(self, subtask_name, *subtask_args):
+        """Triggers the running of a subtask with the matching name."""
         for subtask in self.subtasks:
             if subtask.name == subtask_name:
                 subtask(*subtask_args)
 
     def add_subtask(self, subtask):
+        """Adds the passed subtask to the list."""
         self.subtasks.append(subtask)
 
 
@@ -80,10 +82,8 @@ class RunContext:
         """
         Log a message.
 
-        Use the params phase and max to generate
-        a category number for the message, e.g.:
-
-        [2/7] Doing stuff...
+        Example:
+            [2/7] Doing stuff...
         """
         phase = str(self.task_count() + 1) + "/" + str(self.task_count() - self.completed_task_count())
         if os.getenv("CI") is not None:

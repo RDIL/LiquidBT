@@ -1,6 +1,4 @@
-import os
-from typing import Dict, Callable, List
-from .tasks import Task
+"""The plugin API."""
 
 
 class Plugin:
@@ -14,7 +12,7 @@ class Plugin:
     def load(self, ctx):
         """
         Called on load of the plugin from within LiquidBT.
-        
+
         If you are overriding this, **you should set
         `self.ctx` to the passed argument.**
         """
