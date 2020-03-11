@@ -37,13 +37,6 @@ class Build(Plugin):
         self.packages = packages
         self.kwargs = kwargs
         self.files = files
-        self._manual_triggers = []  # type: ignore
-
-    @property
-    def commands(self):
-        return {
-            "build": self.entrypoint
-        }
 
     def entrypoint(self, plugins, locale):
         self.plugins = plugins
@@ -93,7 +86,7 @@ class Build(Plugin):
             log_continued_message(
                 locale["build.transform"]
             )
-            for plugin in plugins + self._manual_triggers:
+            for plugin in plugins:
                 if plugin.plugin_type == "transformer":
                     e = plugin.process_code(code)
                     if e is not None and type(e) == str:
@@ -131,11 +124,3 @@ class Build(Plugin):
                 del e
         handle.write(code)
         handle.close()
-
-    def use_transformer(self, t):
-        """
-        Manually injects a transformer.
-        **Please don't use this unless you know
-        what you are doing.**
-        """
-        self._manual_triggers.append(t)

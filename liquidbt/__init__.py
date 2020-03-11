@@ -1,12 +1,12 @@
 """LiquidBT entrypoint."""
 
-import sys
 import liquidbt_plugin_build
 import liquidbt_i18n
 import os
 import json
 import functools
-from .plugins import log, Plugin
+from .plugins import Plugin
+from .tasks import RunContext
 from typing import List
 
 __all__ = [
@@ -33,44 +33,19 @@ def load_translations(identifier: str = "en_us"):
 plugin_list_type = List[Plugin]
 
 
-def main(plugins: plugin_list_type = [], lang: str = "en_us"):
+def main(packages, plugins: plugin_list_type = [], lang: str = "en_us"):
     """Runtime."""
 
     locale = load_translations(lang)
-    log(locale["build.loadPlugins"], phase=1, max=1, emoji="load")
+    ctx = RunContext(locale)
+
+    ctx.log(locale["build.loadPlugins", emoji="load")
 
     build_plugin_present = False
     for plugin in plugins:
         if type(plugin) == liquidbt_plugin_build.Build:
-            build_plugin_present = True
-
-        if plugin.plugin_type == "transformer" and not build_plugin_present:
-            raise EnvironmentError(locale[
-                "errors.transformerLoadWithoutBuildPlugin"
-            ])
-        else:
-            plugin.load()
-
-    command = ""
-    for item in sys.argv:
-        if not item.startswith("-") and not item.endswith(".py"):
-            command = item
-
-    if command == "":
-        if (
-            type(plugins) == list and len(plugins) != 0
-            and build_plugin_present
-        ):
-            # hack that makes "build" the default command if
-            # the build plugin is loaded
-            command = "build"
-        else:
-            raise ValueError(locale["errors.noCommand"])
-
-    for plugin in plugins:
-        for key in plugin.commands.keys():
-            if command == key:
-                plugin.commands[command](plugins, locale)
+            ctx.build_plugin = plugin
+        plugin.load(ctx)
 
     for plugin in plugins:
         plugin.shutdown()
