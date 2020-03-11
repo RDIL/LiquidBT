@@ -19,9 +19,6 @@ class RemovePrints(TransformerPlugin):
             return code
         lines = code.splitlines()
         for line in lines:
-            if "print " in line or (
-                "print(" in line
-                and ")" in line
-            ):
+            if "print " in line or ("print(" in line and ")" in line):
                 lines.pop(lines.index(line))
         return "\n".join(lines)

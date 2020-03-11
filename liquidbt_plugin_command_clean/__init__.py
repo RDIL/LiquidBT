@@ -1,5 +1,5 @@
 from liquidbt.plugins import Plugin
-from liquidbt_plugin_build.handlers import unsafely_clean
+from liquidbt.build_tools.handlers import unsafely_clean
 
 
 class CleanCommand(Plugin):
@@ -7,9 +7,7 @@ class CleanCommand(Plugin):
 
     @property
     def commands(self):
-        return {
-            "clean": self.entrypoint
-        }
+        return {"clean": self.entrypoint}
 
     def entrypoint(self, plugins, locale):
         if self.get_build_plugin(plugins) == None:
@@ -17,4 +15,3 @@ class CleanCommand(Plugin):
 
         for p in self.get_build_plugin(plugins).packages:
             unsafely_clean(p.pkgname, False)
-

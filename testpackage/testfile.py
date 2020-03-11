@@ -4,6 +4,7 @@ print("hello world")
 
 yayvar = ":DDD"
 
+
 def func(yay):
     return yay * yay
 

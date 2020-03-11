@@ -1,96 +1,84 @@
 """The tasks API."""
 
 import os
-from typing import List, Optional
+from typing import List, Optional, Callable
 from .plugins import Plugin
+from enum import IntEnum
+
+
+class TaskStatuses(IntEnum):
+    """An enum for the task statuses."""
+
+    """The task is ready to be executed."""
+    READY = 0
+    """The task has already finished."""
+    COMPLETED = 1
+    """The task was skipped."""
+    SKIPPED = 2
 
 
 class Task:
     """A task that can be run."""
 
-    skipped: bool
+    status: int
     name: str
-    subtasks: List[any]
 
     def __init__(self):
         """Create the class."""
-        self.skipped = False
-        self.subtasks = []
+        self.status = TaskStatuses.READY
+
+    def __repr__(self):
+        return "<Task status={}>".format(str(self.status))
 
     def run(self):
-        """Run the task. (Do NOT manually call this, use __call__)."""
+        """Run the task. (Do NOT manually call this anywhere in your plugin)."""
         pass
 
     def skip(self):
         """Set the task to skipped, preventing it from being run."""
-        self.skipped = True
+        self.status = TaskStatuses.SKIPPED
 
     def __call__(self):
         """Run the task."""
-        if self.skipped:
+        if self.status is not TaskStatuses.READY:
             return
         self.run()
 
-    def run_subtask(self, subtask_name, *subtask_args):
-        """Triggers the running of a subtask with the matching name."""
-        for subtask in self.subtasks:
-            if subtask.name == subtask_name:
-                subtask(*subtask_args)
-
-    def add_subtask(self, subtask):
-        """Adds the passed subtask to the list."""
-        self.subtasks.append(subtask)
-
 
 class RunContext:
-    """A mechanism used internally to manage and store data during runtime."""
+    """A mechanism used to manage and store data during runtime."""
 
     # Task related items
-    _all_tasks: List[Task]
-    _completed_tasks: List[Task]
+    _tasks: List[Task]
 
     # Global data
-    translations: List[str]
-    plugins: List[Plugin]
-    build_plugin: Plugin  # circular import prevents static typing this
+    locale: List[str]
+    _plugins: List[Plugin]
+    _transformers: List[Callable]
 
     def __init__(self, locale):
         """Create the class. THIS IS DONE INTERNALLY, DO NOT RUN!"""
-        self.translations = locale
+        self.locale = locale
 
     def add_task(self, task: Task):
         """Adds a task to the task list."""
-        self._all_tasks.append(task)
+        self._tasks.append(task)
 
-    def task_count(self):
+    def task_count(self) -> int:
         """Get the number of tasks registered total."""
-        return len(self._all_tasks)
+        return len(self._tasks)
 
-    def completed_task_count(self):
-        """Get the number of tasks that have completed."""
-        return len(self._completed_tasks)
+    def get_tasks(self) -> List[Task]:
+        """Gets the list of tasks registered."""
+        return self._tasks
 
-    def __call__(self):
-        """Run the next task."""
-        if self.task_count() - self.completed_task_count() > 0:
-            for task in self._all_tasks:
-                if task not in self._completed_tasks:
-                    task()
-                    self._completed_tasks.append(task)
-    
-    def log(self, message, emoji: Optional[str] = ""):
-        """
-        Log a message.
+    def log(self, message):
+        print(f"    {message}")
 
-        Example:
-            [2/7] Doing stuff...
-        """
-        phase = str(self.task_count() + 1) + "/" + str(self.task_count() - self.completed_task_count())
-        if os.getenv("CI") is not None:
-            print(f"[{phase}]  {message}")
-        else:
-            print(f"[{phase}/{max}] {emoji}  {message}")
+    def add_transformer(self, transformer: Callable):
+        """Adds a transformer to the end of the list."""
+        self._transformers.append(transformer)
 
-    def log_continued_message(self, message):
-        """Log a continued message from the previous message (just a style thing)."""
-        print(f"         {message}")
+    def get_build_transformers(self):
+        """Get a list of transformers in the order they were registered in."""
+        return self._transformers

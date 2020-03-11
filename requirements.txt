@@ -1,1 +1,2 @@
 wheel==0.34.2
+tostring>=0.1.0

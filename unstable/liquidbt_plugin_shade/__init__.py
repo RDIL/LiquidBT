@@ -19,9 +19,7 @@ class Shade(Plugin):
             tarname = f"{package.name}.tar"
 
             open(tarname, mode="wb").write(
-                gzip.decompress(
-                    get(package.url).content
-                )
+                gzip.decompress(get(package.url).content)
             )
 
             tarfile.TarFile(tarname).extractall(package.name)
@@ -29,15 +27,7 @@ class Shade(Plugin):
             # copy the contents to the package
             name_of_shade = f"lib{package.name}{random.randint(100, 100000)}"
 
-            shutil.copytree(
-                package.name,
-                name_of_shade
-            )
-
-            _create_transformer(self.bp, {
-                "old": package.name,
-                "new": name_of_shade
-            })
+            shutil.copytree(package.name, name_of_shade)
 
 
 def _create_transformer(bp, textdata):
@@ -48,4 +38,4 @@ def _create_transformer(bp, textdata):
 
     t.process_code = process_code
 
-    bp.use_transformer(t)
+    # bp.use_transformer(t)

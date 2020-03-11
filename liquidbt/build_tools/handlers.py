@@ -4,7 +4,7 @@ import os
 import sys
 import shutil
 import textwrap
-from liquidbt.plugins import log, log_continued_message
+from tostring import tostring
 
 
 def create_or_clear(file):
@@ -14,31 +14,31 @@ def create_or_clear(file):
         os.remove(file)
 
 
-def write_setup_file(setuptoolsargs, pkgname):
-    log_continued_message(
+def write_setup_file(ctx, setuptoolsargs, pkgname):
+    ctx.log_continued_message(
         f"Writing setuptools confguration for {pkgname}"
     )
+
     with open("tmpsetup.py", mode="a") as fh:
-        fh.write(textwrap.dedent("""
-            import setuptools
-            setuptools.setup(
-        """))
-        fh.write(f"\n    name=\"{pkgname}\",")
+        # start off with basic data
+        fh.write("import setuptools\nsetuptools.setup(\n")
+        fh.write(f'\n    name="{pkgname}",')
+
+        # these options are required
         setuptoolsargs["zip_safe"] = False
         setuptoolsargs["include_package_data"] = True
+
         for key in setuptoolsargs:
             val = setuptoolsargs[key]
-            if type(val) == str:
-                fh.write(f"\n    {key}=\"{val}\",")
-            elif type(val) == bool:
-                fh.write(f"\n    {key}={str(val)},")
-            elif type(val) == dict:
-                # something like package_data will be a dict
-                fh.write("\n    " + key + "={")
-                for option in val:
-                    fh.write(f"\n        {option}: \"{val[option]}\",")
-                fh.write("\n    }")
-        fh.write(f"\n    packages=[\"{pkgname}\"]")
+            if type(val) == list or type(val) == dict or type(val) == bool:
+                # doesn't need string inclosing after the =
+                fh.write(f"\n    {key}={tostring(val)},")
+            else:
+                # does need string inclosing after the =
+                fh.write(f"\n    {key}=\"{tostring(val)}\",")
+
+        # write the final metadata
+        fh.write(f'\n    packages=["{pkgname}"]')
         fh.write("\n)")
 
 
@@ -48,7 +48,7 @@ def setuptools_launch_wrapper(setuptools_args: str):
 
 
 def unsafely_clean(pkgname, keepsrc):
-    """Force clean up."""
+    """Cleans up the files left behind for the named package."""
 
     try:
         os.remove("tmpsetup.py")

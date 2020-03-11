@@ -12,13 +12,12 @@ class Deploy(Plugin):
 
     @property
     def commands(self):
-        return {
-            "publish": self.entrypoint,
-            "deploy": self.entrypoint
-        }
+        return {"publish": self.entrypoint, "deploy": self.entrypoint}
 
     def entrypoint(self, *args, **kwargs):
-        os.system(f"{sys.executable} -m twine upload dist/* {self.twine_args}")
+        os.system(
+            f"{sys.executable} -m twine upload dist/* {self.twine_args}"
+        )
 
 
 def use_environment() -> str:
