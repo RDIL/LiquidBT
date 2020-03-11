@@ -1,7 +1,10 @@
 import shutil
 import os
 from .handlers import (
-    unsafely_clean, setuptools_launch_wrapper, create_or_clear, write_setup_file
+    unsafely_clean,
+    setuptools_launch_wrapper,
+    create_or_clear,
+    write_setup_file,
 )
 
 
@@ -15,7 +18,7 @@ def handle_single_file(ctx, file):
     handler = open(file.replace(".py", "") + "_dist.py", "w")
 
     # have the transformers do their thing
-    ctx.log_continued_message(ctx.locale["build.transform"])
+    ctx.log(ctx.locale["build.transform"])
 
     for transformer in ctx.get_build_transformers():
         e = transformer(code)
@@ -28,7 +31,6 @@ def handle_single_file(ctx, file):
 def handle_package(ctx, package):
     """Builds a full package."""
 
-    plugins = ctx.plugins
     locale = ctx.locale
 
     setuptoolsargs = package.setuptools_args
@@ -51,7 +53,7 @@ def handle_package(ctx, package):
     for file in os.listdir(pkgname):
         actualfile = "/".join([pkgname, file])
         code = open(actualfile, "r").read()
-        
+
         # clear the file
         handler = open(actualfile, "w")
         # have the transformers do their thing
@@ -63,13 +65,10 @@ def handle_package(ctx, package):
         handler.write(code)
         handler.close()
 
-        ctx.log(locale["build.launchSetuptools"])
+    ctx.log(locale["build.launchSetuptools"])
 
-        setuptools_launch_wrapper(stringbuilder)
+    setuptools_launch_wrapper(stringbuilder)
 
-        if os.getenv("DEBUG_NO_CLEAN_ON_END") is None:
-        #    ctx.log(locale["build.clean"])
-            unsafely_clean(pkgname, package.keepsrc)
-
-        ctx.log(locale["build.done"], phase=7, emoji="done")
-
+    if os.getenv("DEBUG_NO_CLEAN_ON_END") is None:
+        ctx.log(locale["build.clean"])
+        unsafely_clean(pkgname, package.keepsrc)

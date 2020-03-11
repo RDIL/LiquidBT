@@ -30,10 +30,7 @@ plugin_list_type = List[Plugin]
 
 
 def main(
-    *args,
-    plugins: plugin_list_type = [],
-    lang: str = "en_us",
-    **kwargs,
+    *args, plugins: plugin_list_type = [], lang: str = "en_us", **kwargs,
 ):
     """
     The build system runtime.
@@ -91,9 +88,12 @@ def _create_build_task(ctx, build_item, is_package):
     t.name = "Build " + build_item
 
     if is_package:
+
         def run(self):
             handle_package(ctx, build_item)
+
     else:
+
         def run(self):
             handle_single_file(ctx, build_item)
 

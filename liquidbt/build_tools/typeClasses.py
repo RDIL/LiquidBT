@@ -3,18 +3,21 @@ from typing import List
 
 class DistFormat:
     """An abstract distribution format."""
+
     def __str__(self) -> str:
         return ""
 
 
 class SourceDist(DistFormat):
     """A source distribution, typically a `.tar.gz`."""
+
     def __str__(self) -> str:
         return "sdist"
 
 
 class WheelBinaryDist(DistFormat):
     """A wheel distribution (`.whl` file)."""
+
     def __str__(self) -> str:
         return "bdist_wheel"
 

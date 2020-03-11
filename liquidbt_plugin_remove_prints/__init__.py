@@ -1,8 +1,8 @@
-from liquidbt.plugins import TransformerPlugin
+from liquidbt.plugins import Plugin
 import os
 
 
-class RemovePrints(TransformerPlugin):
+class RemovePrints(Plugin):
     """
     Plugin that removes print statements
     from the code that is compiled,
@@ -14,7 +14,15 @@ class RemovePrints(TransformerPlugin):
     needs to not be None).
     """
 
-    def process_code(self, code: str) -> str:
+    def load(self, ctx):
+        """Loads the plugin."""
+
+        self.ctx = ctx
+        self.ctx.add_transformer(self.transform)
+
+    def transform(self, code: str) -> str:
+        """Transforms the code."""
+
         if os.getenv("development") is not None:
             return code
         lines = code.splitlines()

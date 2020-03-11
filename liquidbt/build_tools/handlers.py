@@ -15,9 +15,7 @@ def create_or_clear(file):
 
 
 def write_setup_file(ctx, setuptoolsargs, pkgname):
-    ctx.log_continued_message(
-        f"Writing setuptools confguration for {pkgname}"
-    )
+    ctx.log("Writing setuptools confguration for " + pkgname)
 
     with open("tmpsetup.py", mode="a") as fh:
         # start off with basic data
@@ -35,7 +33,7 @@ def write_setup_file(ctx, setuptoolsargs, pkgname):
                 fh.write(f"\n    {key}={tostring(val)},")
             else:
                 # does need string inclosing after the =
-                fh.write(f"\n    {key}=\"{tostring(val)}\",")
+                fh.write(f'\n    {key}="{tostring(val)}",')
 
         # write the final metadata
         fh.write(f'\n    packages=["{pkgname}"]')

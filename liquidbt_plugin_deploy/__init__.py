@@ -24,9 +24,7 @@ class Deploy(Plugin):
             t.skip()
 
     def entrypoint(self):
-        system(
-            f"{sys.executable} -m twine upload dist/* {self.twine_args}"
-        )
+        system(f"{sys.executable} -m twine upload dist/* {self.twine_args}")
 
 
 def use_env() -> str:

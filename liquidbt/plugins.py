@@ -6,6 +6,7 @@ class Plugin:
 
     def __init__(self, *args, **kwargs):
         """Called on initialization of the plugin class."""
+
         self.args = args
         self.kwargs = kwargs
 
@@ -19,15 +20,15 @@ class Plugin:
         self.ctx = ctx
 
     def shutdown(self):
-        """Called on shutdown of LiquidBT."""
+        """
+        Called on shutdown of LiquidBT.
+
+        At this point, no new tasks can be created,
+        so just run any final code here.
+        """
         pass
 
     @property
     def name(self) -> str:
         """The plugin's name."""
         return "Unnamed"
-
-    @property
-    def plugin_type(self):
-        """The plugin type - primarily used by build module."""
-        return "typical"
