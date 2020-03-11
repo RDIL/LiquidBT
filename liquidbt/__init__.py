@@ -3,7 +3,6 @@
 import liquidbt_i18n
 import os
 import json
-import functools
 from .plugins import Plugin
 from .build_tools.api import handle_package, handle_single_file
 from .tasks import RunContext, Task, TaskStatuses
@@ -12,7 +11,6 @@ from typing import List
 __all__ = ["main", "plugin_list_type", "load_translations"]
 
 
-@functools.lru_cache(maxsize=None)
 def load_translations(identifier: str = "en_us"):
     """Loads the translations for the named language."""
     return json.load(

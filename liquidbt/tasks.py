@@ -82,3 +82,14 @@ class RunContext:
     def get_build_transformers(self):
         """Get a list of transformers in the order they were registered in."""
         return self._transformers
+
+
+def create_task(name: str, runnable: Callable) -> Task:
+    """
+    Creates a task named the value of the `name` argument,
+    which calls the `runnable` argument.
+    """
+    t = Task()
+    t.name = name
+    t.run = runnable
+    return t
