@@ -1,6 +1,5 @@
 from liquidbt.plugins import Plugin
 from liquidbt.tasks import create_task
-from liquidbt.cli_tools import get_named_command
 from os import getenv, system
 import sys
 
@@ -30,4 +29,6 @@ class Deploy(Plugin):
 def use_env() -> str:
     """Use environment variables for username and password."""
 
-    return f"--username {getenv('TWINE_USERNAME')} --password {getenv('TWINE_PASSWORD')}"
+    return "--username {} --password {}".format(
+        getenv("TWINE_USERNAME"), getenv("TWINE_PASSWORD")
+    )

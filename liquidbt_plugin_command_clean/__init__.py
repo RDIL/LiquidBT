@@ -1,17 +1,16 @@
 from liquidbt.plugins import Plugin
 from liquidbt.build_tools.handlers import unsafely_clean
+from liquidbt.tasks import RunContext, create_task
 
 
 class CleanCommand(Plugin):
-    """Plugin that adds the 'clean' command (same functionality as the build plugin)."""
+    """A plugin that adds the 'clean' command."""
 
-    @property
-    def commands(self):
-        return {"clean": self.entrypoint}
+    def load(self, ctx: RunContext):
+        self.ctx = ctx
+        if self.ctx.command == "clean":
+            self.ctx.add_task(create_task("Clean up", self.entrypoint))
 
-    def entrypoint(self, plugins, locale):
-        if self.get_build_plugin(plugins) == None:
-            raise RuntimeError("Couldn't find build plugin!")
-
-        for p in self.get_build_plugin(plugins).packages:
+    def entrypoint(self):
+        for p in self.ctx.packages:
             unsafely_clean(p.pkgname, False)

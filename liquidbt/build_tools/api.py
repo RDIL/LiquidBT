@@ -6,9 +6,10 @@ from .handlers import (
     create_or_clear,
     write_setup_file,
 )
+from ..tasks import RunContext
 
 
-def handle_single_file(ctx, file):
+def handle_single_file(ctx: RunContext, file):
     """Runs transformation actions for a single file."""
 
     # the contents of the source file
@@ -28,7 +29,7 @@ def handle_single_file(ctx, file):
     handler.close()
 
 
-def handle_package(ctx, package):
+def handle_package(ctx: RunContext, package):
     """Builds a full package."""
 
     locale = ctx.locale

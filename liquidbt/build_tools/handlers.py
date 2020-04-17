@@ -3,18 +3,18 @@
 import os
 import sys
 import shutil
-import textwrap
+from ..tasks import RunContext
 from tostring import tostring
 
 
-def create_or_clear(file):
+def create_or_clear(file: str):
     try:
         open(file, mode="w")
     except FileExistsError:
         os.remove(file)
 
 
-def write_setup_file(ctx, setuptoolsargs, pkgname):
+def write_setup_file(ctx: RunContext, setuptoolsargs, pkgname: str):
     ctx.log("Writing setuptools confguration for " + pkgname)
 
     with open("tmpsetup.py", mode="a") as fh:
@@ -45,7 +45,7 @@ def setuptools_launch_wrapper(setuptools_args: str):
     os.system(f"{sys.executable} tmpsetup.py --quiet{setuptools_args}")
 
 
-def unsafely_clean(pkgname, keepsrc):
+def unsafely_clean(pkgname: str, keepsrc: bool):
     """Cleans up the files left behind for the named package."""
 
     try:

@@ -46,6 +46,7 @@ class PackageConfig:
 
     def add_format(self, d):
         """Adds the passed DistFormat."""
+
         if not isinstance(d, DistFormat):
             raise TypeError("Incorrect format specified!")
         self.formats.append(d)
@@ -55,12 +56,15 @@ class PackageConfig:
         Keyword arguments that shouldn't make it to setuptools,
         or will be modified before being given to setuptools.
         """
+
         return ["keep_generated_sources", "name", "packages", "formats"]
 
     def _iter_args(self, args):
         """
-        Filters through the keyword arguments and excludes the ones that we don't want.
+        Filters through the keyword arguments and excludes the
+        ones that we don't want.
         """
+
         built = {}
         for (key, value) in args.items():
             if key not in self._internal_only_kwargs():

@@ -6,9 +6,26 @@ import json
 from .plugins import Plugin
 from .build_tools.api import handle_package, handle_single_file
 from .tasks import RunContext, Task, TaskStatuses
-from typing import List
+from .build_tools.typeClasses import (
+    SourceDist,
+    WheelBinaryDist,
+    DistFormat,
+    PackageConfig,
+)
+from typing import List, Union
+import argparse
 
-__all__ = ["main", "plugin_list_type", "load_translations"]
+__all__ = [
+    "main",
+    "plugin_list_type",
+    "load_translations",
+    "SourceDist",
+    "WheelBinaryDist",
+    "DistFormat",
+    "PackageConfig",
+    "RunContext",
+    "Task",
+]
 
 
 def load_translations(identifier: str = "en_us"):
@@ -34,7 +51,7 @@ def main(
 ):
     """
     The build system runtime.
-    
+
     For the non-keyword arguments, pass a BuildConfiguration
         instance per each package.
     For the `plugins` argument, pass a list of plugins to use.
@@ -42,29 +59,39 @@ def main(
         it's localization (defaults to `en_US`).
     """
 
-    files = kwargs.get("files")
-    packages = args
+    print("\n")
 
-    if files is None:
-        files = []
-    if packages is None:
-        packages = []
+    parser = argparse.ArgumentParser(
+        description="The CLI for your build system."
+    )
+    argparse.Namespace
+    parser.add_argument(
+        "command", type=str, nargs="?", help="the command you want to run."
+    )
+
+    command = parser.parse_args().command
+    if command is None:
+        command = "build"
+
+    files = kwargs.get("files", [])
+    packages = kwargs.get("packages", [])
 
     if packages == [] and files == [] and plugins == []:
         raise RuntimeError(
-            "You need to add build config(s), or plugins to the liquidbt.main arguments!"
+            "You need to add build configs or plugins to the main() arguments!"
         )
 
     locale = load_translations(lang)
-    ctx = RunContext(locale)
+    ctx = RunContext(locale, command)
 
-    print(locale["build.loadPlugins"], emoji="load")
+    ctx.log(locale["build.loadPlugins"])
 
-    for file in files:
-        ctx.add_task(_create_build_task(ctx, file, False))
+    if command == "build":
+        for f in files:
+            ctx.add_task(_create_build_task(ctx, f, False))
 
-    for package in packages:
-        ctx.add_task(_create_build_task(ctx, package, True))
+        for package in packages:
+            ctx.add_task(_create_build_task(ctx, package, True))
 
     for plugin in plugins:
         plugin.load(ctx)
@@ -81,21 +108,20 @@ def main(
         plugin.shutdown()
 
 
-def _create_build_task(ctx, build_item, is_package):
+def _create_build_task(
+    ctx: RunContext, build_item: Union[str, PackageConfig], is_package: bool
+):
     """Creates a task on the fly to build a package or file."""
 
-    t = Task()
-    t.name = "Build " + build_item
-
-    if is_package:
-
-        def run(self):
-            handle_package(ctx, build_item)
-
-    else:
+    class VirtualBuildTask(Task):
+        name: str = "Build" + (  # type: ignore
+            build_item.pkgname if is_package else build_item  # type: ignore
+        )
 
         def run(self):
-            handle_single_file(ctx, build_item)
+            if is_package:
+                handle_package(ctx, build_item)
+            else:
+                handle_single_file(ctx, build_item)
 
-    t.run = run
-    return t
+    return VirtualBuildTask()

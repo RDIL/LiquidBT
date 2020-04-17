@@ -13,5 +13,5 @@ setuptools.setup(
     packages=setuptools.find_packages(exclude=["unstable", "testpackage"]),
     install_requires=dependencies,
     include_package_data=True,
-    zip_safe=False
+    zip_safe=False,
 )
