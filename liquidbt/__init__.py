@@ -64,7 +64,6 @@ def main(
     parser = argparse.ArgumentParser(
         description="The CLI for your build system."
     )
-    argparse.Namespace
     parser.add_argument(
         "command", type=str, nargs="?", help="the command you want to run."
     )
