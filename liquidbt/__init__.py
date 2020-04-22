@@ -67,6 +67,7 @@ def main(
         "command", type=str, nargs="?", help="the command you want to run."
     )
 
+    print("\n")
     bar = CustomProgressBar()
 
     command = parser.parse_args().command
