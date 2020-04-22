@@ -1,5 +1,7 @@
 """The tasks API."""
 
+# from area4.util import get_divider_character
+from .progressbars import CustomProgressBar
 from typing import Callable, Dict, List
 from .plugins import Plugin
 from enum import IntEnum
@@ -55,6 +57,7 @@ class RunContext:
 
     # Task related items
     _tasks: List[Task]
+    _progress_bar: CustomProgressBar
 
     # Global data
     locale: Dict[str, str]
@@ -62,7 +65,12 @@ class RunContext:
     _plugins: List[Plugin]
     _transformers: List[Callable]
 
-    def __init__(self, locale: Dict[str, str], command: str):
+    def __init__(
+        self,
+        locale: Dict[str, str],
+        command: str,
+        bar: CustomProgressBar
+    ):
         """Create the class. THIS IS DONE INTERNALLY, DO NOT USE!"""
 
         self.locale = locale
@@ -70,6 +78,8 @@ class RunContext:
         self._plugins = []
         self._transformers = []
         self.command = command
+        self._progress_bar = bar
+        self._progress_bar.set_ctx(self)
 
     def add_task(self, task: Task):
         """Adds a task to the task list."""
@@ -86,10 +96,13 @@ class RunContext:
 
         return self._tasks
 
-    def log(self, message: str):
+    def log(self, message, emoji: int = 0):
         """Logs a message."""
 
-        print(f"    {message}")
+        # if emoji == 0:
+        #     print(message)
+        # else:
+        #     print(" ".join([get_divider_character(emoji), message]))
 
     def add_transformer(self, transformer: Callable):
         """Adds a transformer to the end of the list."""

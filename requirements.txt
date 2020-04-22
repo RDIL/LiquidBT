@@ -1,2 +1,4 @@
 wheel==0.34.2
 tostring>=0.1.0
+area4>=3.0.0
+progress

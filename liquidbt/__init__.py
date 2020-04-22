@@ -13,6 +13,7 @@ from .build_tools.typeClasses import (
     PackageConfig,
 )
 from typing import List, Union
+from .progressbars import CustomProgressBar
 import argparse
 
 __all__ = [
@@ -59,14 +60,14 @@ def main(
         it's localization (defaults to `en_US`).
     """
 
-    print("\n")
-
     parser = argparse.ArgumentParser(
         description="The CLI for your build system."
     )
     parser.add_argument(
         "command", type=str, nargs="?", help="the command you want to run."
     )
+
+    bar = CustomProgressBar()
 
     command = parser.parse_args().command
     if command is None:
@@ -81,7 +82,7 @@ def main(
         )
 
     locale = load_translations(lang)
-    ctx = RunContext(locale, command)
+    ctx = RunContext(locale, command, bar)
 
     ctx.log(locale["build.loadPlugins"])
 
@@ -98,13 +99,17 @@ def main(
     while True:
         for task in ctx.get_tasks():
             if task.status is TaskStatuses.READY:
+                ctx._progress_bar.before_task(task)
                 task()
+                ctx._progress_bar.after_task()
                 task.status = TaskStatuses.COMPLETED
                 continue
         break
 
     for plugin in plugins:
         plugin.shutdown()
+
+    bar.finish()
 
 
 def _create_build_task(
@@ -113,7 +118,7 @@ def _create_build_task(
     """Creates a task on the fly to build a package or file."""
 
     class VirtualBuildTask(Task):
-        name: str = "Build" + (  # type: ignore
+        name: str = "Build " + (  # type: ignore
             build_item.pkgname if is_package else build_item  # type: ignore
         )
 
