@@ -12,13 +12,12 @@ from .build_tools.typeClasses import (
     DistFormat,
     PackageConfig,
 )
-from typing import List, Union
+from typing import Dict, List, Union
 from .progressbars import CustomProgressBar
 import argparse
 
 __all__ = [
     "main",
-    "plugin_list_type",
     "load_translations",
     "SourceDist",
     "WheelBinaryDist",
@@ -29,8 +28,9 @@ __all__ = [
 ]
 
 
-def load_translations(identifier: str = "en_us"):
+def load_translations(identifier: str) -> Dict[str, str]:
     """Loads the translations for the named language."""
+
     return json.load(
         open(
             "/".join(
@@ -44,20 +44,17 @@ def load_translations(identifier: str = "en_us"):
     )
 
 
-plugin_list_type = List[Plugin]
-
-
 def main(
-    *args, plugins: plugin_list_type = [], lang: str = "en_us", **kwargs,
+    *args, plugins: List[Plugin] = [], lang: str = "en_US", **kwargs,
 ):
     """
     The build system runtime.
 
-    For the non-keyword arguments, pass a BuildConfiguration
-        instance per each package.
+    For the non-keyword arguments, pass a PackageConfig instance
+        per each package.
     For the `plugins` argument, pass a list of plugins to use.
     For the `lang` argument, pass a language if you want to use
-        it's localization (defaults to `en_US`).
+        it (defaults to `en_US`).
     """
 
     parser = argparse.ArgumentParser(
@@ -67,7 +64,6 @@ def main(
         "command", type=str, nargs="?", help="the command you want to run."
     )
 
-    print("\n")
     bar = CustomProgressBar()
 
     command = parser.parse_args().command
@@ -85,6 +81,7 @@ def main(
     locale = load_translations(lang)
     ctx = RunContext(locale, command, bar)
 
+    print("\n")
     ctx.log(locale["build.loadPlugins"])
 
     if command == "build":

@@ -66,10 +66,7 @@ class RunContext:
     _transformers: List[Callable]
 
     def __init__(
-        self,
-        locale: Dict[str, str],
-        command: str,
-        bar: CustomProgressBar
+        self, locale: Dict[str, str], command: str, bar: CustomProgressBar
     ):
         """Create the class. THIS IS DONE INTERNALLY, DO NOT USE!"""
 

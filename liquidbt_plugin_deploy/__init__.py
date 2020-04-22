@@ -1,5 +1,5 @@
 from liquidbt.plugins import Plugin
-from liquidbt.tasks import create_task
+from liquidbt.tasks import create_task, RunContext
 from os import getenv, system
 import sys
 
@@ -8,6 +8,7 @@ class Deploy(Plugin):
     """A plugin for adding a deploy task."""
 
     twine_args: str
+    ctx: RunContext
 
     def __init__(self, twine_args: str):
         """Creates the deploy plugin instance."""
@@ -17,10 +18,8 @@ class Deploy(Plugin):
         """Loads the plugin."""
         self.ctx = ctx
 
-        t = create_task("Deploy", self.entrypoint)
-        self.ctx.add_task(t)
-        if getenv("DEPLOY") is None:
-            t.skip()
+        if self.ctx.command in ["deploy", "release"]:
+            self.ctx.add_task(create_task("Deploy", self.entrypoint))
 
     def entrypoint(self):
         system(f"{sys.executable} -m twine upload dist/* {self.twine_args}")

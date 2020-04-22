@@ -1,13 +1,10 @@
 build: clean
 	python3 setup.py sdist bdist_wheel 
+	python3 -m pip install --upgrade dist/*.whl
 .PHONY: build
 
-install-dev: build
-	python3 -m pip install --upgrade dist/*.tar.gz
-.PHONY: install-dev
-
-test: install-dev
-	cd testpackage && python3 liquidbt_config.py
+test: build
+	cd testpackage && python3 build.py
 .PHONY: test
 
 static-analysis: clean
@@ -17,7 +14,12 @@ static-analysis: clean
 	flake8 **/*.py
 .PHONY: static-analysis
 
+format:
+	black *.py --line-length 78
+	black **/*.py --line-length 78
+.PHONY: format
+
 clean:
 	rm -rf *.egg-info build dist .mypy_cache *.egg-info
-	cd testpackage && rm -rf testpackagerdil
+	cd testpackage && rm -rf testpackagerdil build dist
 .PHONY: clean

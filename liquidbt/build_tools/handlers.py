@@ -8,6 +8,11 @@ from tostring import tostring
 
 
 def create_or_clear(file: str):
+    """
+    Creates a file if it doesn't already exist,
+    otherwise clears any existing content from it.
+    """
+
     try:
         open(file, mode="w")
     except FileExistsError:
@@ -15,6 +20,8 @@ def create_or_clear(file: str):
 
 
 def write_setup_file(ctx: RunContext, setuptoolsargs, pkgname: str):
+    """Writes the setup file."""
+
     ctx.log("Writing setuptools confguration for " + pkgname)
 
     with open("tmpsetup.py", mode="a") as fh:
@@ -42,6 +49,7 @@ def write_setup_file(ctx: RunContext, setuptoolsargs, pkgname: str):
 
 def setuptools_launch_wrapper(setuptools_args: str):
     """Launch setuptools with the given arguments."""
+
     os.system(f"{sys.executable} tmpsetup.py --quiet{setuptools_args}")
 
 

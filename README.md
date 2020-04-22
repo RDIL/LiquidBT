@@ -53,6 +53,7 @@ This repository is a monorepo, meaning a lot of packages in one place. Here they
 * `liquidbt` - the base of the system
 * `liquidbt_i18n` - the package that holds translations for the system
 * `liquidbt_plugin_command_clean` - the `clean` command plugin
+* `liquidbt_plugin_deploy` - the deploy plugin
 * `liquidbt_plugin_remove_prints` - a plugin that removes `print()`s from the production source
 * `testpackage` - a package used for testing the system
 * `unstable` - a collection of packages that don't yet work
