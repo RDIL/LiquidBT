@@ -3,6 +3,7 @@
 import os
 import sys
 import shutil
+from subprocess import Popen
 from ..tasks import RunContext
 from tostring import tostring
 
@@ -21,8 +22,6 @@ def create_or_clear(file: str):
 
 def write_setup_file(ctx: RunContext, setuptoolsargs, pkgname: str):
     """Writes the setup file."""
-
-    ctx.log("Writing setuptools confguration for " + pkgname)
 
     with open("tmpsetup.py", mode="a") as fh:
         # start off with basic data
@@ -50,7 +49,10 @@ def write_setup_file(ctx: RunContext, setuptoolsargs, pkgname: str):
 def setuptools_launch_wrapper(setuptools_args: str):
     """Launch setuptools with the given arguments."""
 
-    os.system(f"{sys.executable} tmpsetup.py --quiet{setuptools_args}")
+    Popen(
+        sys.executable + " tmpsetup.py --quiet" + setuptools_args,
+        shell=True
+    ).wait()
 
 
 def unsafely_clean(pkgname: str, keepsrc: bool):

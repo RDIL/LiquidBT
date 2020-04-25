@@ -19,8 +19,6 @@ def handle_single_file(ctx: RunContext, file):
     handler = open(file.replace(".py", "") + "_dist.py", "w")
 
     # have the transformers do their thing
-    ctx.log(ctx.locale["build.transform"])
-
     for transformer in ctx.get_build_transformers():
         e = transformer(code)
         if e is not None and type(e) == str:
@@ -31,8 +29,6 @@ def handle_single_file(ctx: RunContext, file):
 
 def handle_package(ctx: RunContext, package):
     """Builds a full package."""
-
-    locale = ctx.locale
 
     setuptoolsargs = package.setuptools_args
     pkgname = package.pkgname
@@ -58,7 +54,6 @@ def handle_package(ctx: RunContext, package):
         # clear the file
         handler = open(actualfile, "w")
         # have the transformers do their thing
-        ctx.log(locale["build.transform"])
         for transformer in ctx.get_build_transformers():
             e = transformer(code)
             if e is not None and type(e) == str:
@@ -66,10 +61,7 @@ def handle_package(ctx: RunContext, package):
         handler.write(code)
         handler.close()
 
-    ctx.log(locale["build.launchSetuptools"])
-
     setuptools_launch_wrapper(stringbuilder)
 
     if os.getenv("DEBUG_NO_CLEAN_ON_END") is None:
-        ctx.log(locale["build.clean"])
         unsafely_clean(pkgname, package.keepsrc)

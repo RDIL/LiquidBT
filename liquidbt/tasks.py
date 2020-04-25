@@ -93,14 +93,6 @@ class RunContext:
 
         return self._tasks
 
-    def log(self, message, emoji: int = 0):
-        """Logs a message."""
-
-        # if emoji == 0:
-        #     print(message)
-        # else:
-        #     print(" ".join([get_divider_character(emoji), message]))
-
     def add_transformer(self, transformer: Callable):
         """Adds a transformer to the end of the list."""
 
