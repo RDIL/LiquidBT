@@ -2,7 +2,7 @@
 
 # from area4.util import get_divider_character
 from .progressbars import CustomProgressBar
-from typing import Callable, Dict, List
+from typing import Callable, List
 from .plugins import Plugin
 from enum import IntEnum
 
@@ -60,17 +60,13 @@ class RunContext:
     _progress_bar: CustomProgressBar
 
     # Global data
-    locale: Dict[str, str]
     command: str
     _plugins: List[Plugin]
     _transformers: List[Callable]
 
-    def __init__(
-        self, locale: Dict[str, str], command: str, bar: CustomProgressBar
-    ):
+    def __init__(self, command: str, bar: CustomProgressBar):
         """Create the class. THIS IS DONE INTERNALLY, DO NOT USE!"""
 
-        self.locale = locale
         self._tasks = []
         self._plugins = []
         self._transformers = []
