@@ -1,22 +1,23 @@
-from liquidbt.plugins import Plugin, TransformerPlugin
+from liquidbt.plugins import Plugin
+from liquidbt.tasks import RunContext
 from requests import get
 import gzip
 import tarfile
 import shutil
-import random
-
-
-class Package:
-    def __init__(self, name, url):
-        self.name = name
-        self.url = url
 
 
 class Shade(Plugin):
-    def shade(self, bps):
+    def __init__(self, shaded_packages):
+        self.shaded_packages = shaded_packages
+
+    def load(self, ctx):
+        self.ctx = ctx
+
+    def shade(self):
         """Runtime."""
-        for package in bps.b.data["shade_packages"]:
-            tarname = f"{package.name}.tar"
+
+        for package in self.shaded_packages:
+            tarname = f"{package['name']}.tar"
 
             open(tarname, mode="wb").write(
                 gzip.decompress(get(package.url).content)
@@ -24,18 +25,15 @@ class Shade(Plugin):
 
             tarfile.TarFile(tarname).extractall(package.name)
 
-            # copy the contents to the package
-            name_of_shade = f"lib{package.name}{random.randint(100, 100000)}"
-
             shutil.copytree(package.name, name_of_shade)
 
 
-def _create_transformer(bp, textdata):
-    t = TransformerPlugin()
+def _create_transformer(ctx: RunContext, old_import, new_import):
+    """
+    Creates a transformer that remaps the value of `old_import` to
+    `new_import.`
+    """
 
-    def process_code(self, code: str):
-        return code.replace(textdata["old"], textdata["new"])
-
-    t.process_code = process_code
-
-    # bp.use_transformer(t)
+    ctx.add_transformer(
+        lambda code: code.replace(old_import, new_import)
+    )

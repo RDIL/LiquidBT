@@ -16,7 +16,7 @@ class CustomProgressBar(IncrementalBar):
 
     def do_output(self, output):
         """
-        Logs `output` if the shell is not interactive, or sets the 
+        Logs `output` if the shell is not interactive, or sets the
         title of the progress bar to the value of `output` if it is.
         """
 

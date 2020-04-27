@@ -16,6 +16,7 @@ class Deploy(Plugin):
 
     def load(self, ctx):
         """Loads the plugin."""
+
         self.ctx = ctx
 
         if self.ctx.command in ["deploy", "release"]:
