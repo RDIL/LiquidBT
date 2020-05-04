@@ -15,7 +15,7 @@
 > LiquidBT is a tool for managing the full lifecycles of Python packages.
 > Build, test, deploy, and more all in the same place.
 
-### 🏠 [Homepage](https://docs.rdil.rocks)
+### 🏠 [Homepage](https://docs.rdil.rocks/libraries/liquidbt/)
 
 ## Install
 
@@ -43,7 +43,8 @@ Please give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2019 [Reece Dunham](https://github.com/RDIL).<br />
+Copyright © 2020 [Reece Dunham](https://github.com/RDIL).
+
 This project is [GNU General Public License v3](https://gnu.org/licenses/) licensed.
 
 ## Monorepo Design
@@ -51,10 +52,8 @@ This project is [GNU General Public License v3](https://gnu.org/licenses/) licen
 This repository is a monorepo, meaning a lot of packages in one place. Here they all are:
 
 * `liquidbt` - the base of the system
-* `liquidbt_i18n` - the package that holds translations for the system
 * `liquidbt_plugin_command_clean` - the `clean` command plugin
 * `liquidbt_plugin_deploy` - the deploy plugin
 * `liquidbt_plugin_remove_prints` - a plugin that removes `print()`s from the production source
 * `testpackage` - a package used for testing the system
 * `unstable` - a collection of packages that don't yet work
-  * `liquidbt_plugin_remove_comments` - a plugin that removes comments from the production source
