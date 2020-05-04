@@ -83,6 +83,9 @@ def main(
     for plugin in plugins:
         plugin.shutdown()
 
+    bar.do_output("✓ Done!")
+    bar.update()
+
     bar.finish()
 
 
