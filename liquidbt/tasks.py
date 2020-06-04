@@ -1,6 +1,5 @@
 """The tasks API."""
 
-# from area4.util import get_divider_character
 from .progressbars import CustomProgressBar
 from typing import Callable, List
 from .plugins import Plugin
@@ -24,19 +23,33 @@ class Task:
     status: int
     name: str
 
-    def __init__(self):
-        """Create the class."""
+    def __init__(self) -> None:
+        """
+        Create the class.
+
+        Returns:
+            Nothing.
+        """
         self.status = TaskStatuses.READY
 
-    def __repr__(self):
+    def __repr__(self) -> str:
+        """
+        Get the repr value of this class.
+
+        Returns:
+            The repr value.
+        """
         return "<Task status={}>".format(str(self.status))
 
-    def run(self):
+    def run(self) -> None:
         """
         Run the task.
 
         Add the code that your task should execute here, but
         DO NOT manually call this function anywhere in your plugin.
+
+        Returns:
+            Nothing.
         """
 
     def skip(self):

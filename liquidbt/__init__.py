@@ -26,13 +26,21 @@ __all__ = [
 
 def main(
     *args, plugins: List[Plugin] = [], **kwargs,
-):
+) -> None:
     """
     The build system runtime.
 
-    For the non-keyword arguments, pass a PackageConfig instance
-        per each package.
-    For the `plugins` argument, pass a list of plugins to use.
+    For the keyword arguments,
+    pass either packages (a list of PackageConfig objects),
+    and/or files (a list of paths to individual files to build).
+
+    Arguments:
+        args: This isn't actually used, just ignore it.
+        plugins: The list of plugins that you want to use.
+        kwargs: The keyword arguments.
+
+    Returns:
+        Nothing.
     """
 
     parser = argparse.ArgumentParser(
@@ -91,8 +99,18 @@ def main(
 
 def _create_build_task(
     ctx: RunContext, build_item: Union[str, PackageConfig], is_package: bool
-):
-    """Creates a task on the fly to build a package or file."""
+) -> Task:
+    """
+    Creates a task on the fly to build a package or file.
+
+    Arguments:
+        ctx: The `RunContext` object.
+        build_item: The PackageConfig object or path to the file.
+        is_package: If this is a package instead of a file.
+
+    Returns:
+        A `Task` object.
+    """
 
     class VirtualBuildTask(Task):
         name: str = "Build " + (  # type: ignore
