@@ -4,7 +4,7 @@ dependencies = open("requirements.txt", "r").readlines()
 
 setuptools.setup(
     name="liquidbt",
-    version="1.0.0",
+    version="1.0.1",
     description="A modern Python project management tool.",
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
