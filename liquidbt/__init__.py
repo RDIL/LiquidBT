@@ -1,7 +1,7 @@
 """LiquidBT's main entrypoint."""
 
 from .plugins import Plugin
-from .build_tools.api import handle_package, handle_single_file
+from .build_tools import handle_package, handle_single_file
 from .tasks import RunContext, Task, TaskStatuses
 from .build_tools.typeClasses import (
     SourceDist,

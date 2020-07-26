@@ -1,7 +1,5 @@
 """The plugin API."""
 
-from . import RunContext
-
 
 class Plugin:
     """The plugin object."""
@@ -24,7 +22,7 @@ class Plugin:
         self.kwargs = kwargs
         self.name = "Unnamed"
 
-    def load(self, ctx: RunContext) -> None:
+    def load(self, ctx) -> None:
         """
         Called on load of the plugin from within LiquidBT.
 

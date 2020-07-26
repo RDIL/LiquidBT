@@ -1,6 +1,6 @@
 <h1 align="center">Welcome to LiquidBT 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <img alt="Version" src="https://img.shields.io/pypi/v/liquidbt" />
   <a href="https://docs.rdil.rocks" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
