@@ -1,4 +1,5 @@
 <h1 align="center">Welcome to LiquidBT 👋</h1>
+<h1 align="center">WARNING!: THIS IS DEPRECATED AND NO LONGER MAINTAINED</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/pypi/v/liquidbt" />
   <a href="https://docs.rdil.rocks" target="_blank">
